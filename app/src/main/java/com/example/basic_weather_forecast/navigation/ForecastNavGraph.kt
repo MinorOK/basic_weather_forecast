@@ -7,14 +7,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.basic_weather_forecast.ui.main.ForecastMainDestination
-import com.example.basic_weather_forecast.ui.main.ForecastMainScreen
-import com.example.basic_weather_forecast.ui.search.ForecastSearchDestination
-import com.example.basic_weather_forecast.ui.search.ForecastSearchScreen
-import com.example.basic_weather_forecast.ui.settings.ForecastSettingsDestination
-import com.example.basic_weather_forecast.ui.settings.ForecastSettingsScreen
-import com.example.basic_weather_forecast.ui.whole_day.ForecastWholeDayDestination
-import com.example.basic_weather_forecast.ui.whole_day.ForecastWholeDayScreen
+import com.example.basic_weather_forecast.features.home.presentation.ForecastMainDestination
+import com.example.basic_weather_forecast.features.home.presentation.ForecastMainScreen
+import com.example.basic_weather_forecast.features.search.ForecastSearchDestination
+import com.example.basic_weather_forecast.features.search.ForecastSearchScreen
+import com.example.basic_weather_forecast.features.settings.presentation.ForecastSettingsDestination
+import com.example.basic_weather_forecast.features.settings.presentation.ForecastSettingsScreen
+import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayDestination
+import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayScreen
 
 @Composable
 fun ForecastNavHost(
