@@ -99,8 +99,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.4.0")
 
     // Data store
-//    implementation("androidx.datastore:datastore-preferences:1.1.1")
-//    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Dagger Hilt

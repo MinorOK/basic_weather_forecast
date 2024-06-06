@@ -18,7 +18,7 @@ class SearchStringViewModel @Inject constructor(
     private val getCityNameUseCase: GetCityNameUseCase
 ) : ViewModel() {
 
-    suspend fun setSearchStringWithAwait(value: String): Unit = suspendCancellableCoroutine { continuation ->
+    suspend fun setSearchString(value: String): Unit = suspendCancellableCoroutine { continuation ->
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 setCityNameUseCase(value)
@@ -29,7 +29,7 @@ class SearchStringViewModel @Inject constructor(
         }
     }
 
-    suspend fun getSearchStringWithAwait(): String? = suspendCancellableCoroutine { continuation ->
+    suspend fun getSearchString(): String? = suspendCancellableCoroutine { continuation ->
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = getCityNameUseCase()

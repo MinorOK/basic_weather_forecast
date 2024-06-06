@@ -1,7 +1,6 @@
 package com.example.basic_weather_forecast.ui.whole_day
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,14 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.WeatherIcon
 import com.example.basic_weather_forecast.datasource.model.ListElement
@@ -91,7 +88,7 @@ fun ForecastWholeDayScreen(
 
 
     LaunchedEffect(searchViewModel) {
-        cityName = searchViewModel.getSearchStringWithAwait()
+        cityName = searchViewModel.getSearchString()
         viewModel.getWholeDayWeather(cityName ?: "")
 
     }

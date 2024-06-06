@@ -122,7 +122,6 @@ fun ForecastSettingsScreen(
                                 checked = isCelsius,
                                 onCheckedChange = {
                                     settingsPreferencesViewModel.setCelsius(it)
-                                    Log.d("Minoy", "Celsius: $it")
                                 }
                             )
                         }

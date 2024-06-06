@@ -2,7 +2,6 @@ package com.example.basic_weather_forecast.ui.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -73,7 +72,7 @@ fun ForecastMainScreen(
     var cityName by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(searchViewModel) {
-        cityName = searchViewModel.getSearchStringWithAwait()
+        cityName = searchViewModel.getSearchString()
         viewModel.getCurrentWeather(cityName ?: "")
     }
 
@@ -99,8 +98,8 @@ fun ForecastMainScreen(
                         onSearchSubmit = {
                             openSearch = !openSearch
                             searchViewModel.viewModelScope.launch {
-                                searchViewModel.setSearchStringWithAwait(searchText)
-                                val newCityName = searchViewModel.getSearchStringWithAwait() ?: ""
+                                searchViewModel.setSearchString(searchText)
+                                val newCityName = searchViewModel.getSearchString() ?: ""
                                 viewModel.getCurrentWeather(newCityName)
                             }
                             searchText = ""

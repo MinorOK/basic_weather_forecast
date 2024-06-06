@@ -23,7 +23,7 @@ class ForecastWholeDayWeatherMapper @Inject constructor() :
     private fun getWholeDayWeatherSuccess(
         response: Response<ForecastWholeDayWeatherResponseModel>
     ): Result<ForecastWholeDayWeatherResponseModel> {
-        Log.d("Minor", response.body().toString())
+        Log.d("Forecast", response.body().toString())
         val body = response.body()
         return if (body != null) {
             Result.Success(body)
@@ -37,7 +37,7 @@ class ForecastWholeDayWeatherMapper @Inject constructor() :
         return if (errorBody != null) {
             try {
                 val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-                Log.d("Minor", errorResponse.message)
+                Log.d("Forecast", errorResponse.message)
                 Result.Error(errorResponse.message)
             } catch (e: Exception) {
                 Result.Error("Unknown error")

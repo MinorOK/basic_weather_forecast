@@ -20,11 +20,10 @@ class ForecastActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         if (FirstRunUtil.isFirstRun(this)) {
-            Log.d("Minot", "First run detected")
             initializeDatabase()
             FirstRunUtil.setFirstRunCompleted(this)
         } else {
-            Log.d("Minot", "Not first run")
+            Log.d("Forecast", "Not first run")
         }
 
         setContent {
@@ -34,7 +33,7 @@ class ForecastActivity : ComponentActivity() {
 
     private fun initializeDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.setSearchStringWithAwait("Bangkok")
+            viewModel.setSearchString("Bangkok")
         }
     }
 }
