@@ -32,8 +32,8 @@ class WholeDayForecastDataSourceModule {
     fun provideWholeDayApi(retrofit: Retrofit): WholeDayForecastApi =
         retrofit.create(WholeDayForecastApi::class.java)
 
-    @Provides
-    fun provideWholeDayRetrofit(): Retrofit =
-        Retrofit.Builder().baseUrl("https://api.openweathermap.org/data/2.5/")
-            .addConverterFactory(GsonConverterFactory.create()).build()
+//    @Provides
+//    fun provideWholeDayRetrofit(): Retrofit =
+//        Retrofit.Builder().baseUrl("https://api.openweathermap.org/data/2.5/")
+//            .addConverterFactory(GsonConverterFactory.create()).build()
 }

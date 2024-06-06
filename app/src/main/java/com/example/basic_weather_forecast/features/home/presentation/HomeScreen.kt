@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.R
-import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastUiState
+import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastCurrentWeatherUiState
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.features.settings.presentation.SearchStringViewModel
@@ -74,15 +74,16 @@ fun ForecastMainScreen(
     LaunchedEffect(searchViewModel) {
         cityName = searchViewModel.getSearchString()
         viewModel.getCurrentWeather(cityName ?: "")
+        viewModel.getGeocode(cityName ?: "", 5)
     }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when (currentWeatherUiState) {
-                is HomeForecastUiState.Success -> {
+                is HomeForecastCurrentWeatherUiState.Success -> {
                     ForecastAppBar(
-                        title = (currentWeatherUiState as HomeForecastUiState.Success).data.name,
+                        title = (currentWeatherUiState as HomeForecastCurrentWeatherUiState.Success).data.name,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
                         navigateUp = { navigateToSettingsScreen() },
@@ -107,7 +108,7 @@ fun ForecastMainScreen(
                     )
                 }
 
-                is HomeForecastUiState.Loading -> {
+                is HomeForecastCurrentWeatherUiState.Loading -> {
                     ForecastAppBar(
                         title = null,
                         navigateBackIcon = Icons.Default.Settings,
@@ -160,13 +161,13 @@ fun ForecastMainScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 when (currentWeatherUiState) {
-                    is HomeForecastUiState.Success -> {
+                    is HomeForecastCurrentWeatherUiState.Success -> {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top,
                         ) {
                             ForecastMainScreenBody(
-                                (currentWeatherUiState as HomeForecastUiState.Success).data,
+                                (currentWeatherUiState as HomeForecastCurrentWeatherUiState.Success).data,
                                 navigateToWholeDayScreen,
                                 cityName ?: "",
                                 isCelsius
@@ -174,9 +175,9 @@ fun ForecastMainScreen(
                         }
                     }
 
-                    is HomeForecastUiState.Error -> {
+                    is HomeForecastCurrentWeatherUiState.Error -> {
                         Text(
-                            text = (currentWeatherUiState as HomeForecastUiState.Error).message,
+                            text = (currentWeatherUiState as HomeForecastCurrentWeatherUiState.Error).message,
                             style = TextStyle(
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 20.sp,
@@ -185,11 +186,11 @@ fun ForecastMainScreen(
                         )
                     }
 
-                    is HomeForecastUiState.Loading -> {
+                    is HomeForecastCurrentWeatherUiState.Loading -> {
                         CircularProgressIndicator()
                     }
 
-                    is HomeForecastUiState.Nothing -> {
+                    is HomeForecastCurrentWeatherUiState.Nothing -> {
                         Text(text = stringResource(R.string.weather_data_is_empty))
                     }
 

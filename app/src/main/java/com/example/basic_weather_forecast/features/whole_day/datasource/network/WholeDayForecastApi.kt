@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface WholeDayForecastApi {
-    @GET("forecast")
+    @GET("data/2.5/forecast")
     suspend fun requestWholeDayWeather(
         @Query("q") cityName: String,
         @Query("appid") apiKey: String
