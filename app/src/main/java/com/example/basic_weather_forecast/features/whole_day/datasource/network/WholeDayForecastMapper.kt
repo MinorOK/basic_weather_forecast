@@ -1,16 +1,16 @@
-package com.example.basic_weather_forecast.features.home.datasource.network
+package com.example.basic_weather_forecast.features.whole_day.datasource.network
 
 import android.util.Log
-import com.example.basic_weather_forecast.features.home.datasource.model.ErrorResponse
-import com.example.basic_weather_forecast.features.home.datasource.model.ForecastWholeDayWeatherResponseModel
-import com.example.basic_weather_forecast.features.home.datasource.model.Result
+import com.example.basic_weather_forecast.common.model.ErrorResponse
+import com.example.basic_weather_forecast.features.whole_day.datasource.model.ForecastWholeDayWeatherResponseModel
+import com.example.basic_weather_forecast.common.model.Result
 import com.google.gson.Gson
 import io.reactivex.functions.Function
 import retrofit2.Response
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-class ForecastWholeDayWeatherMapper @Inject constructor() :
+class WholeDayForecastMapper @Inject constructor() :
     Function<Response<ForecastWholeDayWeatherResponseModel>, Result<ForecastWholeDayWeatherResponseModel>> {
 
     override fun apply(t: Response<ForecastWholeDayWeatherResponseModel>): Result<ForecastWholeDayWeatherResponseModel> {
@@ -23,7 +23,7 @@ class ForecastWholeDayWeatherMapper @Inject constructor() :
     private fun getWholeDayWeatherSuccess(
         response: Response<ForecastWholeDayWeatherResponseModel>
     ): Result<ForecastWholeDayWeatherResponseModel> {
-        Log.d("Forecast", response.body().toString())
+        Log.d("ForecastLog", response.body().toString())
         val body = response.body()
         return if (body != null) {
             Result.Success(body)
@@ -37,7 +37,7 @@ class ForecastWholeDayWeatherMapper @Inject constructor() :
         return if (errorBody != null) {
             try {
                 val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-                Log.d("Forecast", errorResponse.message)
+                Log.d("ForecastLog", errorResponse.message)
                 Result.Error(errorResponse.message)
             } catch (e: Exception) {
                 Result.Error("Unknown error")

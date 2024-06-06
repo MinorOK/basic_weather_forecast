@@ -1,11 +1,18 @@
 package com.example.basic_weather_forecast.features.home.datasource.model
 
 import android.os.Parcelable
+import com.example.basic_weather_forecast.common.model.Clouds
+import com.example.basic_weather_forecast.common.model.Coord
+import com.example.basic_weather_forecast.common.model.Main
+import com.example.basic_weather_forecast.common.model.Rain
+import com.example.basic_weather_forecast.common.model.Sys
+import com.example.basic_weather_forecast.common.model.Weather
+import com.example.basic_weather_forecast.common.model.Wind
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ForecastCurrentWeatherResponseModel(
+data class HomeForecastResponseModel(
     @SerializedName("coord")
     val coord: Coord? = null,
     @SerializedName("weather")

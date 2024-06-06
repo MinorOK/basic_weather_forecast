@@ -2,9 +2,9 @@ package com.example.basic_weather_forecast.features.whole_day.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.basic_weather_forecast.features.home.datasource.model.ForecastWholeDayWeatherRequestModel
+import com.example.basic_weather_forecast.features.whole_day.datasource.model.WholeDayForecastRequestModel
 import com.example.basic_weather_forecast.features.whole_day.domain.GetWholeDayWeatherUseCase
-import com.example.basic_weather_forecast.features.whole_day.domain.model.ForecastWholeDayWeatherUiState
+import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,30 +13,30 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ForecastWholeDayViewModel @Inject constructor(
+class WholeDayViewModel @Inject constructor(
     private val getWholeDayWeatherUseCase: GetWholeDayWeatherUseCase
 ) :
     ViewModel() {
     private val _wholeDayWeatherUiState =
-        MutableStateFlow<ForecastWholeDayWeatherUiState>(ForecastWholeDayWeatherUiState.Nothing)
-    val wholeDayWeatherUiState: StateFlow<ForecastWholeDayWeatherUiState> = _wholeDayWeatherUiState
+        MutableStateFlow<WholeDayForecastUiState>(WholeDayForecastUiState.Nothing)
+    val wholeDayWeatherUiState: StateFlow<WholeDayForecastUiState> = _wholeDayWeatherUiState
 
     fun getWholeDayWeather(cityName: String) {
         viewModelScope.launch {
             val apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
             try {
-                _wholeDayWeatherUiState.value = ForecastWholeDayWeatherUiState.Loading
+                _wholeDayWeatherUiState.value = WholeDayForecastUiState.Loading
                 delay(1000)
                 getWholeDayWeatherUseCase.execute(
-                    ForecastWholeDayWeatherRequestModel(cityName, apiKey)
+                    WholeDayForecastRequestModel(cityName, apiKey)
                 ).collect { response ->
                     response.let {
                         _wholeDayWeatherUiState.value =
-                            ForecastWholeDayWeatherUiState.Success(response)
+                            WholeDayForecastUiState.Success(response)
                     }
                 }
             } catch (e: Exception) {
-                _wholeDayWeatherUiState.value = ForecastWholeDayWeatherUiState.Error
+                _wholeDayWeatherUiState.value = WholeDayForecastUiState.Error
             }
         }
     }

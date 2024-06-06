@@ -17,16 +17,18 @@ class ForecastActivity : ComponentActivity() {
     private val viewModel: SearchStringViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkIsFirstRun()
+        setContent {
+            ForecastApp()
+        }
+    }
 
+    private fun checkIsFirstRun() {
         if (FirstRunUtil.isFirstRun(this)) {
             initializeDatabase()
             FirstRunUtil.setFirstRunCompleted(this)
         } else {
-            Log.d("Forecast", "Not first run")
-        }
-
-        setContent {
-            ForecastApp()
+            Log.d("ForecastLog", "Not first run")
         }
     }
 

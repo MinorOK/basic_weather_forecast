@@ -34,8 +34,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.ui.SearchBox
 import com.example.basic_weather_forecast.navigation.NavigationDestination
-import com.example.basic_weather_forecast.features.home.presentation.ForecastMainViewModel
-import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayViewModel
+import com.example.basic_weather_forecast.features.home.presentation.HomeViewModel
+import com.example.basic_weather_forecast.features.whole_day.presentation.WholeDayViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -51,8 +51,8 @@ object ForecastSearchDestination : NavigationDestination {
 @Composable
 fun ForecastSearchScreen(
     navigateBack: () -> Unit, modifier: Modifier = Modifier,
-    mainViewModel: ForecastMainViewModel = hiltViewModel(),
-    wholeDayViewModel: ForecastWholeDayViewModel = hiltViewModel(),
+    mainViewModel: HomeViewModel = hiltViewModel(),
+    wholeDayViewModel: WholeDayViewModel = hiltViewModel(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var searchQuery by remember { mutableStateOf("") }

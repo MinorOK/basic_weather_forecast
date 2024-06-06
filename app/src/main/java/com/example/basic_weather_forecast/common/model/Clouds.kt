@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.features.home.datasource.model
+package com.example.basic_weather_forecast.common.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

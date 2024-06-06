@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.ui.WeatherIcon
-import com.example.basic_weather_forecast.features.home.datasource.model.ListElement
-import com.example.basic_weather_forecast.features.whole_day.domain.model.ForecastWholeDayWeatherUiState
+import com.example.basic_weather_forecast.features.whole_day.datasource.model.ListElement
+import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.features.settings.presentation.SearchStringViewModel
@@ -74,7 +74,7 @@ object ForecastWholeDayDestination : NavigationDestination {
 fun ForecastWholeDayScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ForecastWholeDayViewModel = hiltViewModel(),
+    viewModel: WholeDayViewModel = hiltViewModel(),
     settingsViewModel: SettingsPreferencesViewModel = hiltViewModel(),
     searchViewModel: SearchStringViewModel = hiltViewModel()
 ) {
@@ -97,7 +97,7 @@ fun ForecastWholeDayScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when (wholeDayWeatherUiState) {
-                is ForecastWholeDayWeatherUiState.Success -> {
+                is WholeDayForecastUiState.Success -> {
                     ForecastAppBar(
                         title = stringResource(ForecastWholeDayDestination.titleRes),
                         canNavigateBack = true,
@@ -106,7 +106,7 @@ fun ForecastWholeDayScreen(
                     )
                 }
 
-                is ForecastWholeDayWeatherUiState.Loading -> {
+                is WholeDayForecastUiState.Loading -> {
                     ForecastAppBar(
                         title = stringResource(ForecastWholeDayDestination.titleRes),
                         navigateBackIcon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -150,9 +150,9 @@ fun ForecastWholeDayScreen(
                     contentAlignment = Alignment.TopCenter,
                 ) {
                     when (wholeDayWeatherUiState) {
-                        is ForecastWholeDayWeatherUiState.Success -> {
+                        is WholeDayForecastUiState.Success -> {
                             val weatherList =
-                                (wholeDayWeatherUiState as ForecastWholeDayWeatherUiState.Success).data.list
+                                (wholeDayWeatherUiState as WholeDayForecastUiState.Success).data.list
                             LazyColumn {
                                 items(weatherList.size) { index ->
                                     HourlyForecastListItem(
@@ -163,15 +163,15 @@ fun ForecastWholeDayScreen(
                             }
                         }
 
-                        is ForecastWholeDayWeatherUiState.Error -> {
+                        is WholeDayForecastUiState.Error -> {
                             Text(text = stringResource(R.string.weather_data_error_loading))
                         }
 
-                        is ForecastWholeDayWeatherUiState.Loading -> {
+                        is WholeDayForecastUiState.Loading -> {
                             CircularProgressIndicator()
                         }
 
-                        is ForecastWholeDayWeatherUiState.Nothing -> {
+                        is WholeDayForecastUiState.Nothing -> {
                             Text(text = stringResource(R.string.weather_data_is_empty))
                         }
 

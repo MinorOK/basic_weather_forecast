@@ -35,19 +35,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.ui.WeatherIcon
-import com.example.basic_weather_forecast.features.home.datasource.model.Clouds
-import com.example.basic_weather_forecast.features.home.datasource.model.Coord
-import com.example.basic_weather_forecast.features.home.datasource.model.ForecastCurrentWeatherResponseModel
-import com.example.basic_weather_forecast.features.home.datasource.model.Main
-import com.example.basic_weather_forecast.features.home.datasource.model.Sys
-import com.example.basic_weather_forecast.features.home.datasource.model.Weather
-import com.example.basic_weather_forecast.features.home.datasource.model.Wind
+import com.example.basic_weather_forecast.common.model.Clouds
+import com.example.basic_weather_forecast.common.model.Coord
+import com.example.basic_weather_forecast.features.home.datasource.model.HomeForecastResponseModel
+import com.example.basic_weather_forecast.common.model.Main
+import com.example.basic_weather_forecast.common.model.Sys
+import com.example.basic_weather_forecast.common.model.Weather
+import com.example.basic_weather_forecast.common.model.Wind
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
 
 @Composable
 fun ForecastMainScreenBody(
-    weather: ForecastCurrentWeatherResponseModel?,
+    weather: HomeForecastResponseModel?,
     navigateToWholeDayScreen: (String) -> Unit,
     cityName: String,
     isCelsiusState: State<Boolean>
@@ -135,7 +135,7 @@ fun temperatureConverter(
 
 @Composable
 fun WeatherGridBoxDetailSecondRow(
-    weather: ForecastCurrentWeatherResponseModel?,
+    weather: HomeForecastResponseModel?,
     isCelsius: Boolean
 ) {
     Row(
@@ -202,7 +202,7 @@ fun WeatherGridBoxDetailSecondRow(
 
 @Composable
 fun WeatherGridBoxDetailFirstRow(
-    weather: ForecastCurrentWeatherResponseModel?,
+    weather: HomeForecastResponseModel?,
 ) {
     Row(
         modifier = Modifier
@@ -374,7 +374,7 @@ fun tempConverter(isCelsius: Boolean, temp: Double?): String {
 @Composable
 fun ForecastMainCurrentWeatherComponentPreview() {
     ForecastMainScreenBody(
-        ForecastCurrentWeatherResponseModel(
+        HomeForecastResponseModel(
             coord = Coord(
                 lon = 100.5167,
                 lat = 13.75

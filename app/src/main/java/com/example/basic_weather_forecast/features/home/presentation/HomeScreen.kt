@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.R
-import com.example.basic_weather_forecast.features.home.domain.model.ForecastCurrentWeatherUiState
+import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastUiState
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.features.settings.presentation.SearchStringViewModel
@@ -58,7 +58,7 @@ fun ForecastMainScreen(
     navigateToWholeDayScreen: (String) -> Unit,
     navigateToSearchScreen: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ForecastMainViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     settingsViewModel: SettingsPreferencesViewModel = hiltViewModel(),
     searchViewModel: SearchStringViewModel = hiltViewModel()
 ) {
@@ -80,9 +80,9 @@ fun ForecastMainScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when (currentWeatherUiState) {
-                is ForecastCurrentWeatherUiState.Success -> {
+                is HomeForecastUiState.Success -> {
                     ForecastAppBar(
-                        title = (currentWeatherUiState as ForecastCurrentWeatherUiState.Success).data.name,
+                        title = (currentWeatherUiState as HomeForecastUiState.Success).data.name,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
                         navigateUp = { navigateToSettingsScreen() },
@@ -107,7 +107,7 @@ fun ForecastMainScreen(
                     )
                 }
 
-                is ForecastCurrentWeatherUiState.Loading -> {
+                is HomeForecastUiState.Loading -> {
                     ForecastAppBar(
                         title = null,
                         navigateBackIcon = Icons.Default.Settings,
@@ -160,13 +160,13 @@ fun ForecastMainScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 when (currentWeatherUiState) {
-                    is ForecastCurrentWeatherUiState.Success -> {
+                    is HomeForecastUiState.Success -> {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top,
                         ) {
                             ForecastMainScreenBody(
-                                (currentWeatherUiState as ForecastCurrentWeatherUiState.Success).data,
+                                (currentWeatherUiState as HomeForecastUiState.Success).data,
                                 navigateToWholeDayScreen,
                                 cityName ?: "",
                                 isCelsius
@@ -174,9 +174,9 @@ fun ForecastMainScreen(
                         }
                     }
 
-                    is ForecastCurrentWeatherUiState.Error -> {
+                    is HomeForecastUiState.Error -> {
                         Text(
-                            text = (currentWeatherUiState as ForecastCurrentWeatherUiState.Error).message,
+                            text = (currentWeatherUiState as HomeForecastUiState.Error).message,
                             style = TextStyle(
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 20.sp,
@@ -185,11 +185,11 @@ fun ForecastMainScreen(
                         )
                     }
 
-                    is ForecastCurrentWeatherUiState.Loading -> {
+                    is HomeForecastUiState.Loading -> {
                         CircularProgressIndicator()
                     }
 
-                    is ForecastCurrentWeatherUiState.Nothing -> {
+                    is HomeForecastUiState.Nothing -> {
                         Text(text = stringResource(R.string.weather_data_is_empty))
                     }
 

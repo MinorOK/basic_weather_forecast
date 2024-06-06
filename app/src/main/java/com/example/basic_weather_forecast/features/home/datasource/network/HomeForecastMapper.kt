@@ -1,18 +1,18 @@
 package com.example.basic_weather_forecast.features.home.datasource.network
 
-import com.example.basic_weather_forecast.features.home.datasource.model.ErrorResponse
-import com.example.basic_weather_forecast.features.home.datasource.model.ForecastCurrentWeatherResponseModel
-import com.example.basic_weather_forecast.features.home.datasource.model.Result
+import com.example.basic_weather_forecast.common.model.ErrorResponse
+import com.example.basic_weather_forecast.features.home.datasource.model.HomeForecastResponseModel
+import com.example.basic_weather_forecast.common.model.Result
 import com.google.gson.Gson
 import io.reactivex.functions.Function
 import retrofit2.Response
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-class ForecastCurrentWeatherMapper @Inject constructor() :
-    Function<Response<ForecastCurrentWeatherResponseModel>, Result<ForecastCurrentWeatherResponseModel>> {
+class HomeForecastMapper @Inject constructor() :
+    Function<Response<HomeForecastResponseModel>, Result<HomeForecastResponseModel>> {
 
-    override fun apply(t: Response<ForecastCurrentWeatherResponseModel>): Result<ForecastCurrentWeatherResponseModel> {
+    override fun apply(t: Response<HomeForecastResponseModel>): Result<HomeForecastResponseModel> {
         return when (t.code()) {
             HttpURLConnection.HTTP_OK -> getCurrentWeatherSuccess(t)
             else -> getErrorResponse(t)
@@ -20,8 +20,8 @@ class ForecastCurrentWeatherMapper @Inject constructor() :
     }
 
     private fun getCurrentWeatherSuccess(
-        response: Response<ForecastCurrentWeatherResponseModel>
-    ): Result<ForecastCurrentWeatherResponseModel> {
+        response: Response<HomeForecastResponseModel>
+    ): Result<HomeForecastResponseModel> {
         val body = response.body()
         return if (body != null) {
             Result.Success(body)
@@ -30,7 +30,7 @@ class ForecastCurrentWeatherMapper @Inject constructor() :
         }
     }
 
-    private fun getErrorResponse(response: Response<ForecastCurrentWeatherResponseModel>): Result<ForecastCurrentWeatherResponseModel> {
+    private fun getErrorResponse(response: Response<HomeForecastResponseModel>): Result<HomeForecastResponseModel> {
         val errorBody = response.errorBody()?.string()
         return if (errorBody != null) {
             try {
