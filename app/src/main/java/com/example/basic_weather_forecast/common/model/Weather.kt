@@ -6,12 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Weather(
-    @SerializedName("id")
-    val id: Long? = null,
-    @SerializedName("main")
-    val main: String? = null,
-    @SerializedName("description")
-    val description: String? = null,
-    @SerializedName("icon")
-    val icon: String? = null,
+    @SerializedName("id") val id: Long? = null,
+    @SerializedName("main") val main: String? = null,
+    @SerializedName("description") val description: String? = null,
+    @SerializedName("icon") val icon: String? = null,
 ) : Parcelable

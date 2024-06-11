@@ -180,23 +180,23 @@ fun WeatherGridBoxDetailSecondRow(
                 valueUnit = ""
             )
         }
-//        Spacer(modifier = Modifier.width(8.dp))
-//        Surface(
-//            color = Color.White,
-//            modifier = Modifier
-//                .weight(1f)
-//                .height(100.dp),
-//            shape = RoundedCornerShape(16.dp),
-//            tonalElevation = 4.dp,
-//            shadowElevation = 4.dp,
-//        ) {
-//            gridBoxDetail(
-//                painter = painterResource(id = R.drawable.ic_visibility),
-//                title = "ทัศนวิสัย",
-//                value = (weather?.visibility?.div(1000)).toString(),
-//                valueUnit = "กม."
-//            )
-//        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Surface(
+            color = Color.White,
+            modifier = Modifier
+                .weight(1f)
+                .height(100.dp),
+            shape = RoundedCornerShape(16.dp),
+            tonalElevation = 4.dp,
+            shadowElevation = 4.dp,
+        ) {
+            gridBoxDetail(
+                painter = painterResource(id = R.drawable.ic_visibility),
+                title = "ทัศนวิสัย",
+                value = (weather?.visibility?.div(1000)).toString(),
+                valueUnit = "กม."
+            )
+        }
     }
 }
 

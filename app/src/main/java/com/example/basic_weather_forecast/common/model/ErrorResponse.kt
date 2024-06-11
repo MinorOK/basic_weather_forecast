@@ -6,8 +6,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ErrorResponse(
-    @SerializedName("cod")
-    val cod: String,
-    @SerializedName("message")
-    val message: String
+    @SerializedName("cod") val cod: String, @SerializedName("message") val message: String
 ) : Parcelable

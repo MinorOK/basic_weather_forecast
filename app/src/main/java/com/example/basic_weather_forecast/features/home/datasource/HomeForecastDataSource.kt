@@ -10,5 +10,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface HomeForecastDataSource {
     fun getCurrentWeather(request: HomeForecastRequestModel): Flow<HomeForecastResponseModel>
-    fun getGeocode(request: GeocodingRequestModel): Flow<GeocodingResponseModel>
+    fun getGeocode(request: GeocodingRequestModel): Flow<List<GeocodingResponseModel>>
 }

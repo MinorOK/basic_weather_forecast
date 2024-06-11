@@ -29,6 +29,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.R
@@ -74,7 +75,7 @@ fun ForecastMainScreen(
     LaunchedEffect(searchViewModel) {
         cityName = searchViewModel.getSearchString()
         viewModel.getCurrentWeather(cityName ?: "")
-        viewModel.getGeocode(cityName ?: "", 5)
+        viewModel.getGeocode(cityName ?: "", "5")
     }
 
     Scaffold(
@@ -84,12 +85,14 @@ fun ForecastMainScreen(
                 is HomeForecastCurrentWeatherUiState.Success -> {
                     ForecastAppBar(
                         title = (currentWeatherUiState as HomeForecastCurrentWeatherUiState.Success).data.name,
+                        titleTextAlign = TextAlign.Center,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
                         navigateUp = { navigateToSettingsScreen() },
                         canActionButton = true,
                         onActionPressed = {
-                            openSearch = !openSearch
+//                            openSearch = !openSearch
+                            navigateToSearchScreen()
                         },
                         openSearch = openSearch,
                         searchText = searchText,
@@ -111,11 +114,12 @@ fun ForecastMainScreen(
                 is HomeForecastCurrentWeatherUiState.Loading -> {
                     ForecastAppBar(
                         title = null,
+                        titleTextAlign = TextAlign.Center,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
                         canActionButton = true,
                         onActionPressed = {
-                            openSearch = !openSearch
+//                            openSearch = !openSearch
                         },
                         onSearchTextChanged = { newText ->
                             searchText = newText
@@ -126,11 +130,12 @@ fun ForecastMainScreen(
                 else -> {
                     ForecastAppBar(
                         title = null,
+                        titleTextAlign = TextAlign.Center,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
                         canActionButton = true,
                         onActionPressed = {
-                            openSearch = !openSearch
+//                            openSearch = !openSearch
                         },
                         onSearchTextChanged = { newText ->
                             searchText = newText // Update searchText when the text changes

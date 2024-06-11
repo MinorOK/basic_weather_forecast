@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetGeocodeUseCase @Inject constructor(private val forecastRepository: HomeForecastRepository) {
-    fun execute(request: GeocodingRequestModel): Flow<GeocodingResponseModel> {
+    fun execute(request: GeocodingRequestModel): Flow<List<GeocodingResponseModel>> {
         return forecastRepository.getGeocode(request)
     }
 }

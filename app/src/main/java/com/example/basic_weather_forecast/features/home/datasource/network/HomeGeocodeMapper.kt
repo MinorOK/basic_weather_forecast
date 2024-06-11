@@ -10,9 +10,9 @@ import java.net.HttpURLConnection
 import javax.inject.Inject
 
 class HomeGeocodeMapper @Inject constructor() :
-    Function<Response<GeocodingResponseModel>, Result<GeocodingResponseModel>> {
+    Function<Response<List<GeocodingResponseModel>>, Result<List<GeocodingResponseModel>>> {
 
-    override fun apply(t: Response<GeocodingResponseModel>): Result<GeocodingResponseModel> {
+    override fun apply(t: Response<List<GeocodingResponseModel>>): Result<List<GeocodingResponseModel>> {
         return when (t.code()) {
             HttpURLConnection.HTTP_OK -> getGeocodeSuccess(t)
             else -> getErrorResponse(t)
@@ -20,8 +20,8 @@ class HomeGeocodeMapper @Inject constructor() :
     }
 
     private fun getGeocodeSuccess(
-        response: Response<GeocodingResponseModel>
-    ): Result<GeocodingResponseModel> {
+        response: Response<List<GeocodingResponseModel>>
+    ): Result<List<GeocodingResponseModel>> {
         val body = response.body()
         return if (body != null) {
             Result.Success(body)
@@ -30,7 +30,7 @@ class HomeGeocodeMapper @Inject constructor() :
         }
     }
 
-    private fun getErrorResponse(response: Response<GeocodingResponseModel>): Result<GeocodingResponseModel> {
+    private fun getErrorResponse(response: Response<List<GeocodingResponseModel>>): Result<List<GeocodingResponseModel>> {
         val errorBody = response.errorBody()?.string()
         return if (errorBody != null) {
             try {

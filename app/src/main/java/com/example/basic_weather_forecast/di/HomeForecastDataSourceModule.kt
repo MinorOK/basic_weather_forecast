@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
-class HomeForecastDataSourceModule {
+object HomeForecastDataSourceModule {
 
     @Provides
     fun provideHomeForecastRepository(

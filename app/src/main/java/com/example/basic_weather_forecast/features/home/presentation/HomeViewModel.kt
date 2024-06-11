@@ -12,7 +12,6 @@ import com.example.basic_weather_forecast.features.home.domain.model.HomeGeocode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,7 +49,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getGeocode(cityName: String, limit: Int) {
+    fun getGeocode(cityName: String, limit: String) {
         viewModelScope.launch {
             val apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
             _geocodeUiState.value = HomeGeocodeUiState.Loading

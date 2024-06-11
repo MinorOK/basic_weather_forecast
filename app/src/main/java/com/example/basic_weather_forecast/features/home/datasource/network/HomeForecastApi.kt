@@ -16,7 +16,7 @@ interface HomeForecastApi {
     @GET("geo/1.0/direct")
     suspend fun requestGeocoding(
         @Query("q") cityName: String,
-        @Query("limit") responseLimit: Int,
+        @Query("limit") limit: String,
         @Query("appid") apiKey: String
-    ): Response<GeocodingResponseModel>
+    ): Response<List<GeocodingResponseModel>>
 }

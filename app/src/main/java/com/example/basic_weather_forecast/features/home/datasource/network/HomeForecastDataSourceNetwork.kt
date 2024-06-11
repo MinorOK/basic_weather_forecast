@@ -29,7 +29,7 @@ class HomeForecastDataSourceNetwork @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun getGeocode(request: GeocodingRequestModel): Flow<GeocodingResponseModel> {
+    override fun getGeocode(request: GeocodingRequestModel): Flow<List<GeocodingResponseModel>> {
         return flow {
             val response = homeForecastApi.requestGeocoding(
                 request.cityName,

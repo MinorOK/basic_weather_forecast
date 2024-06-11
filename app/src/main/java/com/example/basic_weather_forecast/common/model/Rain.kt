@@ -6,6 +6,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Rain(
-    @SerializedName("1h")
-    val the1H: Double? = null,
+    @SerializedName("1h") val the1H: Double? = null,
 ) : Parcelable

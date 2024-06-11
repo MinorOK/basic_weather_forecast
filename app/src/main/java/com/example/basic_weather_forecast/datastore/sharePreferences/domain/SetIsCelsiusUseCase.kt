@@ -1,6 +1,6 @@
-package com.example.basic_weather_forecast.datastore.domain
+package com.example.basic_weather_forecast.datastore.sharePreferences.domain
 
-import com.example.basic_weather_forecast.datastore.PreferencesRepository
+import com.example.basic_weather_forecast.datastore.sharePreferences.PreferencesRepository
 import javax.inject.Inject
 
 class SetIsCelsiusUseCase @Inject constructor(

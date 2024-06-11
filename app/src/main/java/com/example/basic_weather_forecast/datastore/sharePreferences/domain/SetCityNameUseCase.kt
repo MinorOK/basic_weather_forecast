@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.datastore.domain
+package com.example.basic_weather_forecast.datastore.sharePreferences.domain
 
 import android.content.Context
 

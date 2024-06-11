@@ -33,6 +33,7 @@ class ForecastActivity : ComponentActivity() {
     }
 
     private fun initializeDatabase() {
+        Log.d("ForecastLog", "First run")
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.setSearchString("Bangkok")
         }

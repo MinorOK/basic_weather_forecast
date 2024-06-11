@@ -1,13 +1,14 @@
 package com.example.basic_weather_forecast
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.basic_weather_forecast.common.ui.SearchBox
@@ -30,11 +32,13 @@ fun ForecastApp(navController: NavHostController = rememberNavController()) {
 fun ForecastAppBar(
     title: String?,
     modifier: Modifier = Modifier,
+    titleTextAlign: TextAlign? = TextAlign.Start,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     canNavigateBack: Boolean,
     canActionButton: Boolean = false,
     navigateUp: () -> Unit = {},
     navigateBackIcon: ImageVector? = null,
+    actionIcon: ImageVector? = null,
     onActionPressed: () -> Unit = {},
     openSearch: Boolean = false,
     searchText: String = "",
@@ -43,7 +47,7 @@ fun ForecastAppBar(
 ) {
     val backgroundColor = Color(0xFF2E335A)
 
-    CenterAlignedTopAppBar(
+    TopAppBar(
         title = {
             if (openSearch)
                 SearchBox(
@@ -52,7 +56,12 @@ fun ForecastAppBar(
                     onSearchSubmit = onSearchSubmit
                 )
             else
-                Text(title ?: "-", color = Color.White)
+                Text(
+                    title ?: "-",
+                    color = Color.White,
+                    textAlign = titleTextAlign,
+                    modifier = Modifier.fillMaxWidth()
+                )
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor
@@ -74,7 +83,7 @@ fun ForecastAppBar(
             if (canActionButton)
                 IconButton(onClick = onActionPressed) {
                     Icon(
-                        imageVector = Icons.Default.Search,
+                        imageVector = actionIcon ?: Icons.Default.Search,
                         contentDescription = stringResource(R.string.action_button),
                         tint = Color.White
                     )

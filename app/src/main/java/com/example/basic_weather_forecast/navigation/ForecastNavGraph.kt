@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.basic_weather_forecast.features.home.presentation.ForecastMainDestination
 import com.example.basic_weather_forecast.features.home.presentation.ForecastMainScreen
-import com.example.basic_weather_forecast.features.search.ForecastSearchDestination
-import com.example.basic_weather_forecast.features.search.ForecastSearchScreen
+import com.example.basic_weather_forecast.features.search.presentation.ForecastSearchDestination
+import com.example.basic_weather_forecast.features.search.presentation.SearchScreen
 import com.example.basic_weather_forecast.features.settings.presentation.ForecastSettingsDestination
 import com.example.basic_weather_forecast.features.settings.presentation.ForecastSettingsScreen
 import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayDestination
@@ -50,7 +50,7 @@ fun ForecastNavHost(
         composable(
             route = ForecastSearchDestination.route,
         ) {
-            ForecastSearchScreen(
+            SearchScreen(
                 navigateBack = {
                     navController.navigateUp()
                 },

@@ -4,8 +4,6 @@ import com.example.basic_weather_forecast.features.home.datasource.model.Geocodi
 import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingResponseModel
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeForecastRequestModel
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeForecastResponseModel
-import com.example.basic_weather_forecast.features.whole_day.datasource.model.WholeDayForecastRequestModel
-import com.example.basic_weather_forecast.features.whole_day.datasource.model.ForecastWholeDayWeatherResponseModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -17,7 +15,7 @@ class HomeForecastRepository @Inject constructor(
         return homeForecastDataSource.getCurrentWeather(request)
     }
 
-    override fun getGeocode(request: GeocodingRequestModel): Flow<GeocodingResponseModel> {
+    override fun getGeocode(request: GeocodingRequestModel): Flow<List<GeocodingResponseModel>> {
         return homeForecastDataSource.getGeocode(request)
     }
 }

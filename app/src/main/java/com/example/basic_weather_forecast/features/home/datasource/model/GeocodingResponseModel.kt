@@ -1,6 +1,7 @@
 package com.example.basic_weather_forecast.features.home.datasource.model
 
 import android.os.Parcelable
+import com.example.basic_weather_forecast.common.model.CountryCodes
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -8,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 data class GeocodingResponseModel(
     @SerializedName("name")
     val name: String? = null,
+//    @SerializedName("local_names")
+//    val localNames: CountryCodes? = null,
     @SerializedName("lat")
     val lat: Double? = null,
     @SerializedName("lon")
