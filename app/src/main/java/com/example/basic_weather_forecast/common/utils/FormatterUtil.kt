@@ -1,5 +1,6 @@
 package com.example.basic_weather_forecast.common.utils;
 
+import com.example.basic_weather_forecast.features.whole_day.datasource.model.ListElement
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -20,6 +21,30 @@ object FormatterUtil {
         return this?.let {
             val date = Date(it * 1000L)
             val format = SimpleDateFormat("HH:mm - dd/MM/yyyy", Locale.getDefault())
+            format.timeZone = TimeZone.getTimeZone("GMT+7")
+            format.format(date)
+        } ?: ""
+    }
+
+    fun List<ListElement>.groupByDate(): Map<String, List<ListElement>> {
+        return this.groupBy {
+            it.dt.toDateString()
+        }
+    }
+
+    private fun Long?.toDateString(): String {
+        return this?.let {
+            val date = Date(it * 1000L)
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            format.timeZone = TimeZone.getTimeZone("GMT+7")
+            format.format(date)
+        } ?: ""
+    }
+
+    fun Long?.toTimeString(): String {
+        return this?.let {
+            val date = Date(it * 1000L)
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             format.timeZone = TimeZone.getTimeZone("GMT+7")
             format.format(date)
         } ?: ""

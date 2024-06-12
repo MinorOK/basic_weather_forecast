@@ -2,34 +2,26 @@ package com.example.basic_weather_forecast.features.home.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,11 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.isTraversalGroup
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,9 +43,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
+import com.example.basic_weather_forecast.common.ui.SearchBox
 import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastCurrentWeatherUiState
-import com.example.basic_weather_forecast.features.settings.presentation.SearchStringViewModel
-import com.example.basic_weather_forecast.features.settings.presentation.SettingsPreferencesViewModel
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -75,34 +62,30 @@ object ForecastMainDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForecastMainScreen(
-    navigateToSettingsScreen: () -> Unit,
     navigateToWholeDayScreen: (String) -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    settingsViewModel: SettingsPreferencesViewModel = hiltViewModel(),
-    searchViewModel: SearchStringViewModel = hiltViewModel()
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    var searchText by rememberSaveable { mutableStateOf("") }
+    var cityName by rememberSaveable { mutableStateOf<String?>(null) }
     var isRefreshing by remember { mutableStateOf(false) }
+    var isSearchOpen by remember { mutableStateOf(false) }
+    var isBottomSheetVisible by remember { mutableStateOf(false) }
+
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
     val currentWeatherUiState by viewModel.currentWeatherUiState.collectAsState()
-    val isCelsius = settingsViewModel.isCelsius.collectAsState()
-    var cityName by rememberSaveable { mutableStateOf<String?>(null) }
-    var isSearchOpen by remember { mutableStateOf(false) }
-    var searchText by rememberSaveable { mutableStateOf("") }
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    val suggestionList = stringArrayResource(R.array.countries_array)
+    val isCelsius = viewModel.isCelsius.collectAsState()
+    val oneCallUiState by viewModel.oneCallUiState.collectAsState()
 
-    LaunchedEffect(searchViewModel) {
-        cityName = searchViewModel.getSearchString()
+
+    LaunchedEffect(viewModel) {
+        cityName = viewModel.getSearchString()
         cityName?.let {
             viewModel.getCurrentWeather(it)
-            viewModel.getGeocode(it, "5")
+            viewModel.getWeatherWithOneCall(it)
         }
     }
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when (currentWeatherUiState) {
                 is HomeForecastCurrentWeatherUiState.Success -> {
@@ -111,25 +94,13 @@ fun ForecastMainScreen(
                         titleTextAlign = TextAlign.Center,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
-                        navigateUp = { navigateToSettingsScreen() },
-                        canActionButton = true,
-                        actionIcon = if (isSearchOpen) Icons.Default.Clear else null,
-                        onActionPressed = {
-                            isSearchOpen = !isSearchOpen
+                        navigateUp = {
+                            isBottomSheetVisible = true
                         },
-                    )
-                }
-
-                is HomeForecastCurrentWeatherUiState.Loading -> {
-                    ForecastAppBar(
-                        title = "",
-                        titleTextAlign = TextAlign.Center,
-                        navigateBackIcon = Icons.Default.Settings,
-                        canNavigateBack = true,
-                        navigateUp = { navigateToSettingsScreen() },
                         canActionButton = true,
                         actionIcon = if (isSearchOpen) Icons.Default.Clear else null,
                         onActionPressed = {
+                            searchText = ""
                             isSearchOpen = !isSearchOpen
                         },
                     )
@@ -141,10 +112,13 @@ fun ForecastMainScreen(
                         titleTextAlign = TextAlign.Center,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
-                        navigateUp = { navigateToSettingsScreen() },
+                        navigateUp = {
+                            isBottomSheetVisible = true
+                        },
                         canActionButton = true,
                         actionIcon = if (isSearchOpen) Icons.Default.Clear else null,
                         onActionPressed = {
+                            searchText = ""
                             isSearchOpen = !isSearchOpen
                         },
                     )
@@ -157,7 +131,7 @@ fun ForecastMainScreen(
                 state = swipeRefreshState,
                 onRefresh = {
                     isRefreshing = true
-                    viewModel.getCurrentWeather(cityName ?: "")
+                    cityName?.let { viewModel.getCurrentWeather(it) }
                     MainScope().launch {
                         isRefreshing = false
                     }
@@ -178,12 +152,14 @@ fun ForecastMainScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Top,
                             ) {
-                                ForecastMainScreenBody(
-                                    (currentWeatherUiState as HomeForecastCurrentWeatherUiState.Success).data,
-                                    navigateToWholeDayScreen,
-                                    cityName ?: "",
-                                    isCelsius
-                                )
+                                cityName?.let {
+                                    ForecastMainScreenBody(
+                                        (currentWeatherUiState as HomeForecastCurrentWeatherUiState.Success).data,
+                                        navigateToWholeDayScreen,
+                                        it,
+                                        isCelsius
+                                    )
+                                }
                             }
                         }
 
@@ -214,98 +190,93 @@ fun ForecastMainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(innerPadding)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .semantics { isTraversalGroup = true }
-                        .background(color = Color(0xFF2E335A))
-                ) {
-                    SearchBar(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter),
-                        inputField = {
-                            SearchBarDefaults.InputField(
-                                colors = TextFieldDefaults.colors(),
-                                query = searchText,
-                                onQueryChange = { searchText = it },
-                                onSearch = {
-                                    cityName = it
-                                    expanded = false
-                                    isSearchOpen = !isSearchOpen
-                                    searchViewModel.viewModelScope.launch {
-                                        searchViewModel.setSearchString(cityName ?: "")
-                                        cityName = searchViewModel.getSearchString() ?: ""
-                                        viewModel.getCurrentWeather(cityName ?: "")
-                                    }
-                                    searchText = ""
-                                },
-                                expanded = expanded,
-                                onExpandedChange = { expanded = it },
-                                placeholder = { Text("ค้นหาสถานที่") },
-                                leadingIcon = {
-                                    if (expanded)
-                                        IconButton(onClick = {
-                                            expanded = false
-                                        }) {
-                                            Icon(
-                                                Icons.AutoMirrored.Filled.ArrowBack,
-                                                contentDescription = null
-                                            )
-                                        }
-                                },
-                                trailingIcon = {
-                                    IconButton(onClick = {
-                                        cityName = searchText
-                                        expanded = false
-                                        isSearchOpen = !isSearchOpen
-                                        searchViewModel.viewModelScope.launch {
-                                            searchViewModel.setSearchString(cityName ?: "")
-                                            cityName = searchViewModel.getSearchString() ?: ""
-                                            viewModel.getCurrentWeather(cityName ?: "")
-                                        }
-                                        searchText = ""
-                                    }) {
-                                        Icon(Icons.Default.Search, contentDescription = null)
-                                    }
-                                },
-                            )
-                        },
-                        expanded = expanded,
-                        onExpandedChange = { expanded = it },
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            repeat(suggestionList.size) { idx ->
-                                val resultText = suggestionList[idx]
-                                ListItem(headlineContent = { Text(resultText) },
-                                    leadingContent = {
-                                        Icon(
-                                            Icons.Filled.Star,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                                    modifier = Modifier
-                                        .clickable {
-                                            isSearchOpen = !isSearchOpen
-                                            expanded = false
-                                            cityName = suggestionList[idx]
-                                            searchViewModel.viewModelScope.launch {
-                                                searchViewModel.setSearchString(cityName ?: "")
-                                                cityName =
-                                                    searchViewModel.getSearchString() ?: ""
-                                                viewModel.getCurrentWeather(cityName ?: "")
-                                            }
-                                        }
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 4.dp)
-                                )
-                            }
+                SearchBox(
+                    searchText = searchText,
+                    onSearchTextChanged = { searchText = it },
+                    onSearchSubmit = {
+                        cityName = searchText
+                        isSearchOpen = !isSearchOpen
+                        viewModel.viewModelScope.launch {
+                            viewModel.setSearchString(cityName ?: "")
+                            cityName = viewModel.getSearchString()
+                            cityName?.let { viewModel.getCurrentWeather(it) }
                         }
+                        searchText = ""
                     }
+                )
+            }
+
+            if (isBottomSheetVisible) {
+                ModalBottomSheet(
+                    onDismissRequest = { isBottomSheetVisible = false }
+                ) {
+                    SettingsContent(viewModel)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SettingsContent(
+    viewModel: HomeViewModel
+) {
+    val isCelsius by viewModel.isCelsius.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.temperature),
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (isCelsius)
+                        Text(
+                            text = "${stringResource(R.string.weather_celsius)} (${stringResource(R.string.weather_unit_celsius)})",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                            ),
+                        )
+                    else
+                        Text(
+                            text = "${stringResource(R.string.weather_fahrenheit)} (${
+                                stringResource(
+                                    R.string.weather_unit_fahrenheit
+                                )
+                            })",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                            ),
+                        )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Switch(
+                        checked = isCelsius,
+                        onCheckedChange = {
+                            viewModel.setCelsius(it)
+                        }
+                    )
                 }
             }
         }

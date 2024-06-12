@@ -9,8 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.basic_weather_forecast.features.home.presentation.ForecastMainDestination
 import com.example.basic_weather_forecast.features.home.presentation.ForecastMainScreen
-import com.example.basic_weather_forecast.features.settings.presentation.ForecastSettingsDestination
-import com.example.basic_weather_forecast.features.settings.presentation.ForecastSettingsScreen
 import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayDestination
 import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayScreen
 
@@ -26,7 +24,6 @@ fun ForecastNavHost(
     ) {
         composable(route = ForecastMainDestination.route) {
             ForecastMainScreen(
-                navigateToSettingsScreen = { navController.navigate(ForecastSettingsDestination.route) },
                 navigateToWholeDayScreen = { cityName ->
                     navController.navigate(ForecastWholeDayDestination.createRoute(cityName))
                 },
@@ -43,13 +40,6 @@ fun ForecastNavHost(
                     navController.navigateUp()
                 },
             )
-        }
-        composable(
-            route = ForecastSettingsDestination.route,
-        ) {
-            ForecastSettingsScreen(navigateBack = {
-                navController.navigateUp()
-            })
         }
     }
 }

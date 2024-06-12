@@ -3,22 +3,41 @@ package com.example.basic_weather_forecast.features.home.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.basic_weather_forecast.datastore.sharePreferences.domain.GetCityNameUseCase
+import com.example.basic_weather_forecast.datastore.sharePreferences.domain.GetIsCelsiusUseCase
+import com.example.basic_weather_forecast.datastore.sharePreferences.domain.SetCityNameUseCase
+import com.example.basic_weather_forecast.datastore.sharePreferences.domain.SetIsCelsiusUseCase
 import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingRequestModel
-import com.example.basic_weather_forecast.features.home.datasource.model.HomeForecastRequestModel
+import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingResponseModel
+import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherRequestModel
+import com.example.basic_weather_forecast.features.home.datasource.model.HomeOneCallRequestModel
 import com.example.basic_weather_forecast.features.home.domain.GetCurrentWeatherUseCase
 import com.example.basic_weather_forecast.features.home.domain.GetGeocodeUseCase
+import com.example.basic_weather_forecast.features.home.domain.GetOneCallUseCase
 import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastCurrentWeatherUiState
 import com.example.basic_weather_forecast.features.home.domain.model.HomeGeocodeUiState
+import com.example.basic_weather_forecast.features.home.domain.model.HomeOneCallUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
-    private val getGeocodeUseCase: GetGeocodeUseCase
+    private val getGeocodeUseCase: GetGeocodeUseCase,
+    private val getOneCallUseCase: GetOneCallUseCase,
+    getIsCelsiusUseCase: GetIsCelsiusUseCase,
+    private val setIsCelsiusUseCase: SetIsCelsiusUseCase,
+    private val setCityNameUseCase: SetCityNameUseCase,
+    private val getCityNameUseCase: GetCityNameUseCase
 ) : ViewModel() {
 
     private val _currentWeatherUiState = MutableStateFlow<HomeForecastCurrentWeatherUiState>(
@@ -29,42 +48,103 @@ class HomeViewModel @Inject constructor(
     private val _geocodeUiState =
         MutableStateFlow<HomeGeocodeUiState>(HomeGeocodeUiState.Loading)
 
-    val geocodeUiState: StateFlow<HomeGeocodeUiState> = _geocodeUiState
+    private val _geocodeResponse = MutableStateFlow<List<GeocodingResponseModel>>(emptyList())
+
+    private val _oneCallUiState =
+        MutableStateFlow<HomeOneCallUiState>(HomeOneCallUiState.Loading)
+    val oneCallUiState: StateFlow<HomeOneCallUiState> = _oneCallUiState
+
+    val isCelsius: StateFlow<Boolean> = getIsCelsiusUseCase()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    private val _apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
+
+    fun setCelsius(isCelsius: Boolean) {
+        viewModelScope.launch {
+            setIsCelsiusUseCase(isCelsius)
+        }
+    }
+
+    suspend fun setSearchString(value: String): Unit = suspendCancellableCoroutine { continuation ->
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                setCityNameUseCase(value)
+                continuation.resume(Unit)
+            } catch (e: Exception) {
+                continuation.resumeWithException(e)
+            }
+        }
+    }
+
+    suspend fun getSearchString(): String? = suspendCancellableCoroutine { continuation ->
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = getCityNameUseCase()
+                continuation.resume(result)
+            } catch (e: Exception) {
+                continuation.resumeWithException(e)
+            }
+        }
+    }
 
     fun getCurrentWeather(cityName: String) {
         viewModelScope.launch {
-            val apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
             _currentWeatherUiState.value = HomeForecastCurrentWeatherUiState.Loading
             try {
                 getCurrentWeatherUseCase.execute(
-                    HomeForecastRequestModel(cityName, apiKey)
+                    HomeCurrentWeatherRequestModel(cityName, _apiKey)
                 ).collect { response ->
                     _currentWeatherUiState.value =
                         HomeForecastCurrentWeatherUiState.Success(response)
                 }
             } catch (e: Exception) {
                 _currentWeatherUiState.value =
-                    HomeForecastCurrentWeatherUiState.Error("Unexpected error: ${e.message}")
+                    HomeForecastCurrentWeatherUiState.Error("${e.message}")
             }
         }
     }
 
-    fun getGeocode(cityName: String, limit: String) {
+    private suspend fun fetchGeocode(cityName: String): List<GeocodingResponseModel> {
+        return try {
+            val response = getGeocodeUseCase.execute(
+                GeocodingRequestModel(cityName, "5", _apiKey)
+            )
+            response.collect { geocodes ->
+                _geocodeResponse.value = geocodes
+            }
+            _geocodeResponse.value
+        } catch (e: Exception) {
+            _geocodeUiState.value = HomeGeocodeUiState.Error("${e.message}")
+            emptyList()
+        }
+    }
+
+    fun getWeatherWithOneCall(cityName: String) {
         viewModelScope.launch {
-            val apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
             _geocodeUiState.value = HomeGeocodeUiState.Loading
+            _oneCallUiState.value = HomeOneCallUiState.Loading
+
+            val geocodes = fetchGeocode(cityName)
+            if (geocodes.isNotEmpty()) {
+                val firstGeocode = geocodes[0]
+                getOneCall(firstGeocode.lat ?: 0.0, firstGeocode.lon ?: 0.0)
+            } else {
+                _oneCallUiState.value = HomeOneCallUiState.Error("Geocode failed to fetch data")
+            }
+        }
+    }
+
+    private fun getOneCall(lat: Double, long: Double) {
+        viewModelScope.launch {
             try {
-                getGeocodeUseCase.execute(
-                    GeocodingRequestModel(cityName, limit, apiKey)
+                getOneCallUseCase.execute(
+                    HomeOneCallRequestModel(lat, long, _apiKey)
                 ).collect { response ->
-                    _geocodeUiState.value =
-                        HomeGeocodeUiState.Success(response)
-                    Log.d("ForecastLog", "$response")
+                    _oneCallUiState.value = HomeOneCallUiState.Success(response)
+                    Log.d("ForecastLog", "One Call:\n $response")
                 }
             } catch (e: Exception) {
-                _geocodeUiState.value =
-                    HomeGeocodeUiState.Error("Unexpected error: ${e.message}")
-                Log.d("ForecastLog", "${e.message}")
+                _oneCallUiState.value = HomeOneCallUiState.Error("${e.message}")
             }
         }
     }

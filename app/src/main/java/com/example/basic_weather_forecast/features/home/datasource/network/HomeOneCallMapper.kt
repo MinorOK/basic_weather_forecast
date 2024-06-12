@@ -1,7 +1,7 @@
 package com.example.basic_weather_forecast.features.home.datasource.network
 
 import com.example.basic_weather_forecast.common.model.ErrorResponse
-import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
+import com.example.basic_weather_forecast.features.home.datasource.model.HomeOneCallResponseModel
 import com.example.basic_weather_forecast.common.model.Result
 import com.google.gson.Gson
 import io.reactivex.functions.Function
@@ -9,19 +9,19 @@ import retrofit2.Response
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-class HomeForecastMapper @Inject constructor() :
-    Function<Response<HomeCurrentWeatherResponseModel>, Result<HomeCurrentWeatherResponseModel>> {
+class HomeOneCallMapper @Inject constructor() :
+    Function<Response<HomeOneCallResponseModel>, Result<HomeOneCallResponseModel>> {
 
-    override fun apply(t: Response<HomeCurrentWeatherResponseModel>): Result<HomeCurrentWeatherResponseModel> {
+    override fun apply(t: Response<HomeOneCallResponseModel>): Result<HomeOneCallResponseModel> {
         return when (t.code()) {
-            HttpURLConnection.HTTP_OK -> getCurrentWeatherSuccess(t)
+            HttpURLConnection.HTTP_OK -> getOneCallSuccess(t)
             else -> getErrorResponse(t)
         }
     }
 
-    private fun getCurrentWeatherSuccess(
-        response: Response<HomeCurrentWeatherResponseModel>
-    ): Result<HomeCurrentWeatherResponseModel> {
+    private fun getOneCallSuccess(
+        response: Response<HomeOneCallResponseModel>
+    ): Result<HomeOneCallResponseModel> {
         val body = response.body()
         return if (body != null) {
             Result.Success(body)
@@ -30,7 +30,7 @@ class HomeForecastMapper @Inject constructor() :
         }
     }
 
-    private fun getErrorResponse(response: Response<HomeCurrentWeatherResponseModel>): Result<HomeCurrentWeatherResponseModel> {
+    private fun getErrorResponse(response: Response<HomeOneCallResponseModel>): Result<HomeOneCallResponseModel> {
         val errorBody = response.errorBody()?.string()
         return if (errorBody != null) {
             try {

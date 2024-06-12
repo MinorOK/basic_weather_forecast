@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class HomeForecastResponseModel(
+data class HomeCurrentWeatherResponseModel(
     @SerializedName("coord")
     val coord: Coord? = null,
     @SerializedName("weather")

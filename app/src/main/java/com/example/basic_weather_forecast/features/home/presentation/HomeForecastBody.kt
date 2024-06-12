@@ -34,20 +34,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.basic_weather_forecast.R
-import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.model.Clouds
 import com.example.basic_weather_forecast.common.model.Coord
-import com.example.basic_weather_forecast.features.home.datasource.model.HomeForecastResponseModel
 import com.example.basic_weather_forecast.common.model.Main
 import com.example.basic_weather_forecast.common.model.Sys
 import com.example.basic_weather_forecast.common.model.Weather
 import com.example.basic_weather_forecast.common.model.Wind
+import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
+import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
 
 @Composable
 fun ForecastMainScreenBody(
-    weather: HomeForecastResponseModel?,
+    weather: HomeCurrentWeatherResponseModel?,
     navigateToWholeDayScreen: (String) -> Unit,
     cityName: String,
     isCelsiusState: State<Boolean>
@@ -79,46 +79,62 @@ fun ForecastMainScreenBody(
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = temperatureConverter(
-                isCelsius = isCelsius,
-                temperature = weather?.main?.temp ?: 0.0,
-            ),
-            style = TextStyle(
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 96.sp,
-            )
-        )
+        CurrentTemperature(isCelsius, weather)
         Spacer(modifier = Modifier.height(4.dp))
-        Row {
-            Text(
-                text = "${weather?.weather?.get(0)?.description}",
-                style = TextStyle(
-                    color = Color.White,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 20.sp,
-                )
-            )
-            Spacer(
-                modifier = Modifier
-                    .width(8.dp)
-            )
-            Text(
-                text = "${
-                    tempConverter(isCelsius, weather?.main?.tempMin)
-                } / ${tempConverter(isCelsius, weather?.main?.tempMax)}",
-                style = TextStyle(
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                )
-            )
-        }
+        WeatherDescription(weather, isCelsius)
         Spacer(modifier = Modifier.height(40.dp))
         WeatherHourlyBox(myList, navigateToWholeDayScreen, cityName)
         WeatherGridBoxDetailFirstRow(weather)
         WeatherGridBoxDetailSecondRow(weather = weather, isCelsius = isCelsius)
+    }
+}
+
+@Composable
+private fun CurrentTemperature(
+    isCelsius: Boolean,
+    weather: HomeCurrentWeatherResponseModel?
+) {
+    Text(
+        text = temperatureConverter(
+            isCelsius = isCelsius,
+            temperature = weather?.main?.temp ?: 0.0,
+        ),
+        style = TextStyle(
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 96.sp,
+        )
+    )
+}
+
+@Composable
+private fun WeatherDescription(
+    weather: HomeCurrentWeatherResponseModel?,
+    isCelsius: Boolean
+) {
+    Row {
+        Text(
+            text = "${weather?.weather?.get(0)?.description}",
+            style = TextStyle(
+                color = Color.White,
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+            )
+        )
+        Spacer(
+            modifier = Modifier
+                .width(8.dp)
+        )
+        Text(
+            text = "${
+                tempConverter(isCelsius, weather?.main?.tempMin)
+            } / ${tempConverter(isCelsius, weather?.main?.tempMax)}",
+            style = TextStyle(
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+            )
+        )
     }
 }
 
@@ -135,7 +151,7 @@ fun temperatureConverter(
 
 @Composable
 fun WeatherGridBoxDetailSecondRow(
-    weather: HomeForecastResponseModel?,
+    weather: HomeCurrentWeatherResponseModel?,
     isCelsius: Boolean
 ) {
     Row(
@@ -154,9 +170,9 @@ fun WeatherGridBoxDetailSecondRow(
         ) {
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_air_pressure),
-                title = "ความกดอากาศ",
+                title = stringResource(R.string.air_pressure),
                 value = weather?.main?.pressure.toString(),
-                valueUnit = "hPa"
+                valueUnit = stringResource(R.string.air_pressure_unit)
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -171,7 +187,7 @@ fun WeatherGridBoxDetailSecondRow(
         ) {
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_sun),
-                title = "รู้สึกเหมือน",
+                title = stringResource(R.string.weather_feels_like),
                 value =
                 temperatureConverter(
                     isCelsius = isCelsius,
@@ -192,9 +208,9 @@ fun WeatherGridBoxDetailSecondRow(
         ) {
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_visibility),
-                title = "ทัศนวิสัย",
+                title = stringResource(R.string.vision),
                 value = (weather?.visibility?.div(1000)).toString(),
-                valueUnit = "กม."
+                valueUnit = stringResource(R.string.kilometer)
             )
         }
     }
@@ -202,7 +218,7 @@ fun WeatherGridBoxDetailSecondRow(
 
 @Composable
 fun WeatherGridBoxDetailFirstRow(
-    weather: HomeForecastResponseModel?,
+    weather: HomeCurrentWeatherResponseModel?,
 ) {
     Row(
         modifier = Modifier
@@ -220,9 +236,9 @@ fun WeatherGridBoxDetailFirstRow(
         ) {
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_wind),
-                title = "ลม",
+                title = stringResource(R.string.weather_wind_speed),
                 value = weather?.wind?.speed.toString(),
-                valueUnit = "กม./ชม."
+                valueUnit = stringResource(R.string.kilo_per_hour)
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -237,9 +253,9 @@ fun WeatherGridBoxDetailFirstRow(
         ) {
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_humidity),
-                title = "ความชื้น",
+                title = stringResource(R.string.weather_humidity),
                 value = weather?.main?.humidity.toString(),
-                valueUnit = "%"
+                valueUnit = stringResource(R.string.percentage)
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -254,9 +270,9 @@ fun WeatherGridBoxDetailFirstRow(
         ) {
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_visibility),
-                title = "ทัศนวิสัย",
+                title = stringResource(R.string.vision),
                 value = (weather?.visibility?.div(1000)).toString(),
-                valueUnit = "กม."
+                valueUnit = stringResource(R.string.kilometer)
             )
         }
     }
@@ -331,7 +347,7 @@ fun WeatherHourlyBox(
         ) {
             LazyRow {
                 items(myList) { icon ->
-                    HourlyWeatherForecast(icon)
+                    HourlyWeatherForecast(icon, 0.0)
                 }
             }
         }
@@ -339,7 +355,7 @@ fun WeatherHourlyBox(
 }
 
 @Composable
-fun HourlyWeatherForecast(icon: String) {
+fun HourlyWeatherForecast(icon: String, temp: Double) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -374,7 +390,7 @@ fun tempConverter(isCelsius: Boolean, temp: Double?): String {
 @Composable
 fun ForecastMainCurrentWeatherComponentPreview() {
     ForecastMainScreenBody(
-        HomeForecastResponseModel(
+        HomeCurrentWeatherResponseModel(
             coord = Coord(
                 lon = 100.5167,
                 lat = 13.75

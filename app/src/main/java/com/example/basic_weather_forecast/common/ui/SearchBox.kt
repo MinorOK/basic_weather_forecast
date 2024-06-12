@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBox(
+    modifier: Modifier = Modifier,
     searchText: String,
     onSearchTextChanged: (String) -> Unit,
     onSearchSubmit: () -> Unit,
@@ -35,10 +35,6 @@ fun SearchBox(
             Icon(imageVector = Icons.Filled.Search, contentDescription = null)
         },
         singleLine = true,
-//        colors = TextFieldColors(),
-//        colors = TextFieldDefaults.textFieldColors(
-//            containerColor = Color.White
-//        ),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Done // Change to Done action
         ),

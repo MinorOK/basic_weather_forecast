@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.basic_weather_forecast.features.settings.presentation.SearchStringViewModel
 import com.example.basic_weather_forecast.common.utils.FirstRunUtil
+import com.example.basic_weather_forecast.features.home.presentation.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ForecastActivity : ComponentActivity() {
-    private val viewModel: SearchStringViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkIsFirstRun()

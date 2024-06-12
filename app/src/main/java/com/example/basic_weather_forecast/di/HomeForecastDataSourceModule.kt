@@ -5,6 +5,7 @@ import com.example.basic_weather_forecast.features.home.datasource.network.HomeF
 import com.example.basic_weather_forecast.features.home.datasource.network.HomeForecastDataSourceNetwork
 import com.example.basic_weather_forecast.features.home.domain.GetCurrentWeatherUseCase
 import com.example.basic_weather_forecast.features.home.domain.GetGeocodeUseCase
+import com.example.basic_weather_forecast.features.home.domain.GetOneCallUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +31,11 @@ object HomeForecastDataSourceModule {
     fun provideGeocodingUseCase(
         forecastRepository: HomeForecastRepository
     ) = GetGeocodeUseCase(forecastRepository)
+
+    @Provides
+    fun provideOneCallUseCase(
+        forecastRepository: HomeForecastRepository
+    ) = GetOneCallUseCase(forecastRepository)
 
     @Provides
     fun provideHomeApi(retrofit: Retrofit): HomeForecastApi =

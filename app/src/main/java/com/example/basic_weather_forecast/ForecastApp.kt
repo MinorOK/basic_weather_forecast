@@ -49,7 +49,7 @@ fun ForecastAppBar(
     TopAppBar(
         title = {
             Text(
-                title ?: "-",
+                title ?: "",
                 color = Color.White,
                 textAlign = titleTextAlign,
                 modifier = Modifier.fillMaxWidth()

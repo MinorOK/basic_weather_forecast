@@ -4,21 +4,26 @@
     <string name="back_button">Back</string>
     <string name="action_button">Action Button</string>
     <string name="main_screen">Main Screen</string>
-    <string name="whole_day_screen">Whole Day Forecast</string>
+    <string name="whole_day_screen">พยากรณ์อากาศรายวัน</string>
     <string name="search_screen">Search Screen</string>
-    <string name="settings_screen">Settings</string>
-    <string name="weather_humidity">Humidity</string>
-    <string name="weather_feels_like">Feels like</string>
-    <string name="weather_wind_speed">Wind speed</string>
+    <string name="temperature">อุณหภูมิ</string>
+    <string name="settings_screen">ตั้งค่า</string>
+    <string name="weather_humidity">ความชื้น</string>
+    <string name="weather_feels_like">รู้สึกเหมือน</string>
+    <string name="weather_wind_speed">ความเร็วลม</string>
     <string name="weather_unit_celsius">°C</string>
     <string name="weather_unit_fahrenheit">°F</string>
     <string name="weather_celsius">celsius</string>
     <string name="weather_fahrenheit">fahrenheit</string>
     <string name="weather_unit">°</string>
-    <string name="kilo_per_hour">km/h</string>
+    <string name="kilometer">กม.</string>
+    <string name="vision">ทัศนวิสัย</string>
+    <string name="kilo_per_hour">กม./ชม.</string>
+    <string name="air_pressure">ความกดอากาศ</string>
+    <string name="air_pressure_unit">hPa</string>
     <string name="percentage">%</string>
-    <string name="weather_data_is_empty">No data available</string>
-    <string name="weather_data_error_loading">Error loading weather data</string>
+    <string name="weather_data_is_empty">ไม่มีข้อมูล</string>
+    <string name="weather_data_error_loading">เกิดข้อผิดพลาด</string>
     <string-array name="countries_array">
         <item>Afghanistan</item>
         <item>Albania</item>
