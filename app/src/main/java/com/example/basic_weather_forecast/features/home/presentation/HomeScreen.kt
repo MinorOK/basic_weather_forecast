@@ -77,7 +77,6 @@ object ForecastMainDestination : NavigationDestination {
 fun ForecastMainScreen(
     navigateToSettingsScreen: () -> Unit,
     navigateToWholeDayScreen: (String) -> Unit,
-    navigateToSearchScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     settingsViewModel: SettingsPreferencesViewModel = hiltViewModel(),
@@ -123,12 +122,13 @@ fun ForecastMainScreen(
 
                 is HomeForecastCurrentWeatherUiState.Loading -> {
                     ForecastAppBar(
-                        title = null,
+                        title = "",
                         titleTextAlign = TextAlign.Center,
                         navigateBackIcon = Icons.Default.Settings,
                         canNavigateBack = true,
                         navigateUp = { navigateToSettingsScreen() },
                         canActionButton = true,
+                        actionIcon = if (isSearchOpen) Icons.Default.Clear else null,
                         onActionPressed = {
                             isSearchOpen = !isSearchOpen
                         },
@@ -143,6 +143,7 @@ fun ForecastMainScreen(
                         canNavigateBack = true,
                         navigateUp = { navigateToSettingsScreen() },
                         canActionButton = true,
+                        actionIcon = if (isSearchOpen) Icons.Default.Clear else null,
                         onActionPressed = {
                             isSearchOpen = !isSearchOpen
                         },
@@ -221,7 +222,8 @@ fun ForecastMainScreen(
                         .background(color = Color(0xFF2E335A))
                 ) {
                     SearchBar(
-                        modifier = Modifier.align(Alignment.TopCenter),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter),
                         inputField = {
                             SearchBarDefaults.InputField(
                                 colors = TextFieldDefaults.colors(),
@@ -272,38 +274,35 @@ fun ForecastMainScreen(
                         expanded = expanded,
                         onExpandedChange = { expanded = it },
                     ) {
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .verticalScroll(rememberScrollState())
-                                .fillMaxSize()
                         ) {
-                            Column {
-                                repeat(suggestionList.size) { idx ->
-                                    val resultText = suggestionList[idx]
-                                    ListItem(headlineContent = { Text(resultText) },
-                                        leadingContent = {
-                                            Icon(
-                                                Icons.Filled.Star,
-                                                contentDescription = null
-                                            )
-                                        },
-                                        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                                        modifier = Modifier
-                                            .clickable {
-                                                isSearchOpen = !isSearchOpen
-                                                expanded = false
-                                                cityName = suggestionList[idx]
-                                                searchViewModel.viewModelScope.launch {
-                                                    searchViewModel.setSearchString(cityName ?: "")
-                                                    cityName =
-                                                        searchViewModel.getSearchString() ?: ""
-                                                    viewModel.getCurrentWeather(cityName ?: "")
-                                                }
+                            repeat(suggestionList.size) { idx ->
+                                val resultText = suggestionList[idx]
+                                ListItem(headlineContent = { Text(resultText) },
+                                    leadingContent = {
+                                        Icon(
+                                            Icons.Filled.Star,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                                    modifier = Modifier
+                                        .clickable {
+                                            isSearchOpen = !isSearchOpen
+                                            expanded = false
+                                            cityName = suggestionList[idx]
+                                            searchViewModel.viewModelScope.launch {
+                                                searchViewModel.setSearchString(cityName ?: "")
+                                                cityName =
+                                                    searchViewModel.getSearchString() ?: ""
+                                                viewModel.getCurrentWeather(cityName ?: "")
                                             }
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp, vertical = 4.dp)
-                                    )
-                                }
+                                        }
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                                )
                             }
                         }
                     }

@@ -45,8 +45,6 @@ fun ForecastAppBar(
     onActionPressed: () -> Unit = {},
 ) {
     val backgroundColor = Color(0xFF2E335A)
-    var text by rememberSaveable { mutableStateOf("") }
-    var expanded by rememberSaveable { mutableStateOf(false) }
 
     TopAppBar(
         title = {
