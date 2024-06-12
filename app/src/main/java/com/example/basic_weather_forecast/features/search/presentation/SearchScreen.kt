@@ -81,7 +81,6 @@ object ForecastSearchDestination : NavigationDestination {
         get() = "search"
     override val titleRes: Int
         get() = R.string.search_screen
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
