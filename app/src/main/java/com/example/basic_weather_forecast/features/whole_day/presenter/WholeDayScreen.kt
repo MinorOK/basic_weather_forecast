@@ -180,6 +180,7 @@ private fun WholeDayDateHeader(date: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
+            .padding(top = 8.dp)
     ) {
         Text(
             text = date,
@@ -213,7 +214,6 @@ fun HourlyForecastListItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .padding(bottom = 8.dp)
     ) {
         Column(
             modifier = Modifier
