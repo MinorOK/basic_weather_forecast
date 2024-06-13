@@ -25,6 +25,7 @@
     <string name="percentage">%</string>
     <string name="weather_data_is_empty">ไม่มีข้อมูล</string>
     <string name="weather_data_error_loading">เกิดข้อผิดพลาด</string>
+    <string name="something_went_wrong">เกิดข้อผิดพลาด</string>
     <string-array name="countries_array">
         <item>Afghanistan</item>
         <item>Albania</item>

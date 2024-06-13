@@ -151,6 +151,9 @@ fun ForecastWholeDayScreen(
                             Text(text = stringResource(R.string.weather_data_is_empty))
                         }
 
+                        else -> {
+                            Text(text = stringResource(R.string.something_went_wrong))
+                        }
                     }
                 }
             }
