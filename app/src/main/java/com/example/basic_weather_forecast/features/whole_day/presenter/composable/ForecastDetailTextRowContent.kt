@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.basic_weather_forecast.common.theme.Typography
 
 @Composable
 fun ForecastDetailTextRowContent(title: String, detail: String) {
@@ -17,7 +18,13 @@ fun ForecastDetailTextRowContent(title: String, detail: String) {
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = title)
-        Text(text = detail)
+        Text(
+            text = title,
+            style = Typography.labelMedium
+        )
+        Text(
+            text = detail,
+            style = Typography.labelMedium
+        )
     }
 }

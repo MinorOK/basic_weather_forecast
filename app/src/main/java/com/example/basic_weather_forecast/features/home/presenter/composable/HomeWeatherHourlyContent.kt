@@ -23,6 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.basic_weather_forecast.R
+import com.example.basic_weather_forecast.common.theme.secondaryColor
 import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
@@ -37,7 +38,7 @@ fun HomeWeatherHourlyContent(
     isCelsius: Boolean
 ) {
     Surface(shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        color = secondaryColor,
         tonalElevation = 4.dp,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 4.dp)

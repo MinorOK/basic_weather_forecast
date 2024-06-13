@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.basic_weather_forecast.R
+import com.example.basic_weather_forecast.common.theme.secondaryColor
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
 
 @Composable
@@ -27,7 +28,7 @@ fun HomeWeatherGridBoxDetailSecondRowContent(
             .padding(horizontal = 16.dp, vertical = 4.dp)
     ) {
         Surface(
-            color = Color.White,
+            color = secondaryColor,
             modifier = Modifier
                 .weight(1f)
                 .height(100.dp),
@@ -44,7 +45,7 @@ fun HomeWeatherGridBoxDetailSecondRowContent(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Surface(
-            color = Color.White,
+            color = secondaryColor,
             modifier = Modifier
                 .weight(1f)
                 .height(100.dp),
@@ -63,7 +64,7 @@ fun HomeWeatherGridBoxDetailSecondRowContent(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Surface(
-            color = Color.White,
+            color = secondaryColor,
             modifier = Modifier
                 .weight(1f)
                 .height(100.dp),

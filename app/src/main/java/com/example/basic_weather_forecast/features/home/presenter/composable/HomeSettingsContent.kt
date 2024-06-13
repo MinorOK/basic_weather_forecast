@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.basic_weather_forecast.R
+import com.example.basic_weather_forecast.common.theme.Typography
 import com.example.basic_weather_forecast.features.home.presenter.HomeViewModel
 
 @Composable
@@ -46,20 +47,14 @@ fun HomeSettingsContent(
             ) {
                 Text(
                     text = stringResource(R.string.temperature),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    ),
+                    style = Typography.bodyMedium,
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (isCelsius) Text(
                         text = "${stringResource(R.string.weather_celsius)} (${stringResource(R.string.weather_unit_celsius)})",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        ),
+                        style = Typography.labelMedium,
                     )
                     else Text(
                         text = "${stringResource(R.string.weather_fahrenheit)} (${
@@ -67,10 +62,7 @@ fun HomeSettingsContent(
                                 R.string.weather_unit_fahrenheit
                             )
                         })",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        ),
+                        style = Typography.labelMedium,
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Switch(checked = isCelsius, onCheckedChange = {

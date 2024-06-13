@@ -42,6 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
+import com.example.basic_weather_forecast.common.theme.Typography
+import com.example.basic_weather_forecast.common.theme.primaryColor
+import com.example.basic_weather_forecast.common.theme.secondaryColor
 import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.groupByDate
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toTimeString
@@ -117,7 +120,7 @@ fun ForecastWholeDayScreen(
                 Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .background(color = Color(0xFF2E335A)),
+                    .background(color = primaryColor),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
@@ -175,7 +178,7 @@ fun GroupedWeatherList(
 private fun WholeDayDateHeader(date: String) {
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = Color.White,
+        color = secondaryColor,
         tonalElevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
@@ -184,11 +187,7 @@ private fun WholeDayDateHeader(date: String) {
     ) {
         Text(
             text = date,
-            style = TextStyle(
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-            ),
+            style = Typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(vertical = 4.dp)
         )
@@ -209,7 +208,7 @@ fun HourlyForecastListItem(
 
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = Color.White,
+        color = secondaryColor,
         tonalElevation = 4.dp,
         modifier = Modifier
             .fillMaxWidth()
@@ -227,29 +226,20 @@ fun HourlyForecastListItem(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = weatherList.dt.toTimeString(), style = TextStyle(
-                                color = Color.Black,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 20.sp,
-                            )
+                            text = weatherList.dt.toTimeString(),
+                            style = Typography.bodyLarge
                         )
                         WeatherIcon(icon = weatherList.weather[0].icon.toString())
                     }
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = weatherList.weather[0].description.toString(), style = TextStyle(
-                            color = Color.Black,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 16.sp,
-                        )
+                        text = weatherList.weather[0].description.toString(),
+                        style = Typography.bodyMedium,
                     )
                 }
                 Text(
-                    text = temperatureMainText, style = TextStyle(
-                        color = Color.Black,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 24.sp,
-                    )
+                    text = temperatureMainText,
+                    style = Typography.bodyLarge,
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))

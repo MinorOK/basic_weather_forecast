@@ -23,6 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.basic_weather_forecast.common.theme.primaryColor
+import com.example.basic_weather_forecast.common.theme.secondaryColor
 import com.example.basic_weather_forecast.navigation.ForecastNavHost
 
 @Composable
@@ -44,13 +46,13 @@ fun ForecastAppBar(
     actionIcon: ImageVector? = null,
     onActionPressed: () -> Unit = {},
 ) {
-    val backgroundColor = Color(0xFF2E335A)
+    val backgroundColor = primaryColor
 
     TopAppBar(
         title = {
             Text(
                 title ?: "",
-                color = Color.White,
+                color = secondaryColor,
                 textAlign = titleTextAlign,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -66,7 +68,7 @@ fun ForecastAppBar(
                     Icon(
                         imageVector = navigateBackIcon ?: Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button),
-                        tint = Color.White
+                        tint = secondaryColor
                     )
                 }
             }
@@ -77,7 +79,7 @@ fun ForecastAppBar(
                     Icon(
                         imageVector = actionIcon ?: Icons.Default.Search,
                         contentDescription = stringResource(R.string.action_button),
-                        tint = Color.White
+                        tint = secondaryColor
                     )
                 }
         }

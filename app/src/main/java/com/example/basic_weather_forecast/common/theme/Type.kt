@@ -1,21 +1,13 @@
 package com.example.basic_weather_forecast.common.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
-//     Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
@@ -29,6 +21,32 @@ val Typography = Typography(
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
-    )
-
+    ),
+    displayLarge = TextStyle(
+        color = secondaryColor,
+        fontWeight = FontWeight.Bold,
+        fontSize = 96.sp,
+    ),
+    bodyLarge = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+    ),
+    bodyMedium = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
+    ),
+    labelMedium = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+    ),
+    displaySmall = TextStyle(
+        color = secondaryColor,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+    ),
+    displayMedium = TextStyle(
+        color = secondaryColor,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
+    ),
 )

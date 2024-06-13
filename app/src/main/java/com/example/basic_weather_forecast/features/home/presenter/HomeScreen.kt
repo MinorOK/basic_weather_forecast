@@ -43,6 +43,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
+import com.example.basic_weather_forecast.common.theme.primaryColor
+import com.example.basic_weather_forecast.common.theme.secondaryColor
 import com.example.basic_weather_forecast.common.ui.SearchBox
 import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastCurrentWeatherUiState
 import com.example.basic_weather_forecast.features.home.presenter.composable.ForecastMainScreenBody
@@ -140,7 +142,7 @@ fun ForecastMainScreen(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = Color(0xFF2E335A))
+                        .background(color = primaryColor)
                         .verticalScroll(rememberScrollState())
                 ) {
                     when (currentWeatherUiState) {
@@ -166,7 +168,7 @@ fun ForecastMainScreen(
                                 style = TextStyle(
                                     fontWeight = FontWeight.Normal,
                                     fontSize = 20.sp,
-                                    color = Color.White
+                                    color = secondaryColor
                                 )
                             )
                         }

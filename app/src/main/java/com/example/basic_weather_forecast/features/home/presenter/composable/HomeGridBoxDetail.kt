@@ -19,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.basic_weather_forecast.common.theme.Typography
 
 @Composable
 fun HomeGridBoxDetail(painter: Painter, title: String, value: String, valueUnit: String) {
@@ -37,10 +38,7 @@ fun HomeGridBoxDetail(painter: Painter, title: String, value: String, valueUnit:
         Text(
             text = title,
             color = Color.Black,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-            ),
+            style = Typography.labelMedium,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Row(
@@ -49,18 +47,12 @@ fun HomeGridBoxDetail(painter: Painter, title: String, value: String, valueUnit:
             Text(
                 text = value,
                 color = Color.Black,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                ),
+                style = Typography.bodyMedium,
             )
             Text(
                 text = " $valueUnit",
                 color = Color.Black,
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                ),
+                style = Typography.labelMedium,
             )
         }
     }
