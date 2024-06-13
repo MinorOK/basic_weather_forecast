@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -45,17 +46,15 @@ class HomeViewModel @Inject constructor(
     )
     val currentWeatherUiState: StateFlow<HomeForecastCurrentWeatherUiState> = _currentWeatherUiState
 
-    private val _geocodeUiState =
-        MutableStateFlow<HomeGeocodeUiState>(HomeGeocodeUiState.Loading)
+    private val _geocodeUiState = MutableStateFlow<HomeGeocodeUiState>(HomeGeocodeUiState.Loading)
 
     private val _geocodeResponse = MutableStateFlow<List<GeocodingResponseModel>>(emptyList())
 
-    private val _oneCallUiState =
-        MutableStateFlow<HomeOneCallUiState>(HomeOneCallUiState.Loading)
+    private val _oneCallUiState = MutableStateFlow<HomeOneCallUiState>(HomeOneCallUiState.Loading)
     val oneCallUiState: StateFlow<HomeOneCallUiState> = _oneCallUiState
 
-    val isCelsius: StateFlow<Boolean> = getIsCelsiusUseCase()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+    val isCelsius: StateFlow<Boolean> =
+        getIsCelsiusUseCase().stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     private val _apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
 
@@ -89,11 +88,12 @@ class HomeViewModel @Inject constructor(
 
     fun getCurrentWeather(cityName: String) {
         viewModelScope.launch {
-            _currentWeatherUiState.value = HomeForecastCurrentWeatherUiState.Loading
             try {
                 getCurrentWeatherUseCase.execute(
                     HomeCurrentWeatherRequestModel(cityName, _apiKey)
-                ).collect { response ->
+                ).onStart {
+                    _currentWeatherUiState.value = HomeForecastCurrentWeatherUiState.Loading
+                }.collect { response ->
                     _currentWeatherUiState.value =
                         HomeForecastCurrentWeatherUiState.Success(response)
                 }

@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,11 +26,12 @@ class WholeDayViewModel @Inject constructor(
         viewModelScope.launch {
             val apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
             try {
-                _wholeDayWeatherUiState.value = WholeDayForecastUiState.Loading
                 delay(1000)
                 getWholeDayWeatherUseCase.execute(
                     WholeDayForecastRequestModel(cityName, apiKey)
-                ).collect { response ->
+                ).onStart {
+                    _wholeDayWeatherUiState.value = WholeDayForecastUiState.Loading
+                }.collect { response ->
                     response.let {
                         _wholeDayWeatherUiState.value =
                             WholeDayForecastUiState.Success(response)

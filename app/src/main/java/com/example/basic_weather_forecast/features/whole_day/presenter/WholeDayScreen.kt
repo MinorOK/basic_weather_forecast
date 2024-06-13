@@ -31,14 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
@@ -53,6 +48,8 @@ import com.example.basic_weather_forecast.features.home.presenter.composable.Hom
 import com.example.basic_weather_forecast.features.whole_day.datasource.model.ListElement
 import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
 import com.example.basic_weather_forecast.features.whole_day.presenter.composable.ForecastDetailTextRowContent
+import com.example.basic_weather_forecast.features.whole_day.presenter.composable.WholeDayDateHeader
+import com.example.basic_weather_forecast.features.whole_day.presenter.composable.WholeDayGroupedWeatherList
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -128,7 +125,7 @@ fun ForecastWholeDayScreen(
                     is WholeDayForecastUiState.Success -> {
                         val weatherList =
                             (wholeDayWeatherUiState as WholeDayForecastUiState.Success).data.list
-                        GroupedWeatherList(
+                        WholeDayGroupedWeatherList(
                             weatherList = weatherList, isCelsius = isCelsius
                         )
                     }
@@ -151,46 +148,6 @@ fun ForecastWholeDayScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun GroupedWeatherList(
-    weatherList: List<ListElement>, isCelsius: Boolean
-) {
-    val groupedWeather = weatherList.groupByDate()
-
-    LazyColumn {
-        groupedWeather.forEach { (date, weatherForDate) ->
-            item {
-                WholeDayDateHeader(date)
-            }
-            items(weatherForDate) { weatherItem ->
-                HourlyForecastListItem(
-                    weatherList = weatherItem, isCelsius = isCelsius
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun WholeDayDateHeader(date: String) {
-    Surface(
-        shape = RoundedCornerShape(8.dp),
-        color = secondaryColor,
-        tonalElevation = 4.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .padding(top = 8.dp)
-    ) {
-        Text(
-            text = date,
-            style = Typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 4.dp)
-        )
     }
 }
 
