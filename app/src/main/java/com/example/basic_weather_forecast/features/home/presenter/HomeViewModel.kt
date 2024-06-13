@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.features.home.presentation
+package com.example.basic_weather_forecast.features.home.presenter
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

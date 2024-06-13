@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.features.home.presentation
+package com.example.basic_weather_forecast.features.home.presenter
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,9 +42,15 @@ import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toGMTPlus7
+import com.example.basic_weather_forecast.features.home.datasource.model.Clouds
+import com.example.basic_weather_forecast.features.home.datasource.model.Coord
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
+import com.example.basic_weather_forecast.features.home.datasource.model.Main
+import com.example.basic_weather_forecast.features.home.datasource.model.Sys
+import com.example.basic_weather_forecast.features.home.datasource.model.Weather
+import com.example.basic_weather_forecast.features.home.datasource.model.Wind
 import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
-import com.example.basic_weather_forecast.features.whole_day.presentation.WholeDayViewModel
+import com.example.basic_weather_forecast.features.whole_day.presenter.WholeDayViewModel
 
 @Composable
 fun ForecastMainScreenBody(
@@ -62,8 +70,7 @@ fun ForecastMainScreenBody(
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.height(4.dp))
         CurrentTemperature(isCelsius, currentWeather)
@@ -78,15 +85,13 @@ fun ForecastMainScreenBody(
 
 @Composable
 private fun CurrentTemperature(
-    isCelsius: Boolean,
-    weather: HomeCurrentWeatherResponseModel?
+    isCelsius: Boolean, weather: HomeCurrentWeatherResponseModel?
 ) {
     Text(
         text = temperatureConverter(
             isCelsius = isCelsius,
             temperature = weather?.main?.temp ?: 0.0,
-        ),
-        style = TextStyle(
+        ), style = TextStyle(
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 96.sp,
@@ -96,27 +101,23 @@ private fun CurrentTemperature(
 
 @Composable
 private fun WeatherDescription(
-    weather: HomeCurrentWeatherResponseModel?,
-    isCelsius: Boolean
+    weather: HomeCurrentWeatherResponseModel?, isCelsius: Boolean
 ) {
     Row {
         Text(
-            text = "${weather?.weather?.get(0)?.description}",
-            style = TextStyle(
+            text = "${weather?.weather?.get(0)?.description}", style = TextStyle(
                 color = Color.White,
                 fontWeight = FontWeight.Normal,
                 fontSize = 20.sp,
             )
         )
         Spacer(
-            modifier = Modifier
-                .width(8.dp)
+            modifier = Modifier.width(8.dp)
         )
         Text(
             text = "${
                 tempConverter(isCelsius, weather?.main?.tempMin)
-            } / ${tempConverter(isCelsius, weather?.main?.tempMax)}",
-            style = TextStyle(
+            } / ${tempConverter(isCelsius, weather?.main?.tempMax)}", style = TextStyle(
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
@@ -127,8 +128,7 @@ private fun WeatherDescription(
 
 @Composable
 fun temperatureConverter(
-    isCelsius: Boolean,
-    temperature: Double
+    isCelsius: Boolean, temperature: Double
 ): String {
     return temperature.let {
         if (isCelsius) "${it.toCelsius()}${stringResource(R.string.weather_unit)}"
@@ -138,8 +138,7 @@ fun temperatureConverter(
 
 @Composable
 fun WeatherGridBoxDetailSecondRow(
-    weather: HomeCurrentWeatherResponseModel?,
-    isCelsius: Boolean
+    weather: HomeCurrentWeatherResponseModel?, isCelsius: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -175,10 +174,8 @@ fun WeatherGridBoxDetailSecondRow(
             gridBoxDetail(
                 painter = painterResource(id = R.drawable.ic_sun),
                 title = stringResource(R.string.weather_feels_like),
-                value =
-                temperatureConverter(
-                    isCelsius = isCelsius,
-                    temperature = weather?.main?.feelsLike ?: 0.0
+                value = temperatureConverter(
+                    isCelsius = isCelsius, temperature = weather?.main?.feelsLike ?: 0.0
                 ),
                 valueUnit = ""
             )
@@ -318,16 +315,14 @@ fun WeatherHourlyBox(
     cityName: String,
     isCelsius: Boolean
 ) {
-    Surface(
-        shape = RoundedCornerShape(16.dp),
+    Surface(shape = RoundedCornerShape(16.dp),
         color = Color.White,
         tonalElevation = 4.dp,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .clickable {
                 navigateToWholeDayScreen(cityName)
-            }
-    ) {
+            }) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -366,10 +361,7 @@ fun WeatherHourlyBox(
 
 @Composable
 fun HourlyWeatherForecast(
-    icon: String,
-    temp: Double,
-    time: String,
-    isCelsius: Boolean
+    icon: String, temp: Double, time: String, isCelsius: Boolean
 ) {
     val myTemp = if (isCelsius) temp.toCelsius() else temp.toFahrenheit()
     Column(
@@ -402,55 +394,49 @@ fun tempConverter(isCelsius: Boolean, temp: Double?): String {
     return "${temp.toFahrenheit().toString()}${stringResource(R.string.weather_unit)}"
 }
 
-//@Preview
-//@Composable
-//fun ForecastMainCurrentWeatherComponentPreview() {
-//    ForecastMainScreenBody(
-//        HomeCurrentWeatherResponseModel(
-//            coord = Coord(
-//                lon = 100.5167,
-//                lat = 13.75
-//            ),
-//            weather =
-//            listOf(
-//                Weather(
-//                    id = 804,
-//                    main = "Clouds",
-//                    description = "overcast clouds",
-//                    icon = "",
-//                )
-//            ),
-//            base = "stations",
-//            main = Main(
-//                temp = 300.22,
-//                feelsLike = 305.12,
-//                tempMin = 299.21,
-//                tempMax = 300.33,
-//                pressure = 1008,
-//                humidity = 99,
-//                seaLevel = 1008,
-//                grndLevel = 1007
-//            ),
-//            visibility = 7152,
-//            wind = Wind(speed = 3.24, deg = 133, gust = 6.88),
-//            rain = null,
-//            clouds = Clouds(all = 100),
-//            dt = 1716511831,
-//            sys = Sys(
-//                type = 2,
-//                id = 2090634,
-//                country = "TH",
-//                sunrise = 1716504596,
-//                sunset = 1716550797
-//            ),
-//            timezone = 25200,
-//            id = 1609350,
-//            name = "Bangkok",
-//            cod = 200
-//        ),
-//        {},
-//        "Bangkok",
-//        mutableStateOf(true),
-//    )
-//}
-//
+@Preview
+@Composable
+fun ForecastMainCurrentWeatherComponentPreview() {
+    ForecastMainScreenBody(
+        HomeCurrentWeatherResponseModel(
+            coord = Coord(
+                lon = 100.5167, lat = 13.75
+            ),
+            weather = listOf(
+                Weather(
+                    id = 804,
+                    main = "Clouds",
+                    description = "overcast clouds",
+                    icon = "",
+                )
+            ),
+            base = "stations",
+            main = Main(
+                temp = 300.22,
+                feelsLike = 305.12,
+                tempMin = 299.21,
+                tempMax = 300.33,
+                pressure = 1008,
+                humidity = 99,
+                seaLevel = 1008,
+                grndLevel = 1007
+            ),
+            visibility = 7152,
+            wind = Wind(speed = 3.24, deg = 133, gust = 6.88),
+            rain = null,
+            clouds = Clouds(all = 100),
+            dt = 1716511831,
+            sys = Sys(
+                type = 2, id = 2090634, country = "TH", sunrise = 1716504596, sunset = 1716550797
+            ),
+            timezone = 25200,
+            id = 1609350,
+            name = "Bangkok",
+            cod = 200
+        ),
+        {},
+        "Bangkok",
+        mutableStateOf(true),
+    )
+}
+

@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.features.whole_day.presentation
+package com.example.basic_weather_forecast.features.whole_day.presenter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,8 +1,7 @@
-package com.example.basic_weather_forecast.features.whole_day.presentation
+package com.example.basic_weather_forecast.features.whole_day.presenter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +47,7 @@ import com.example.basic_weather_forecast.common.utils.FormatterUtil.groupByDate
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toTimeString
-import com.example.basic_weather_forecast.features.home.presentation.HomeViewModel
+import com.example.basic_weather_forecast.features.home.presenter.HomeViewModel
 import com.example.basic_weather_forecast.features.whole_day.datasource.model.ListElement
 import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
 import com.example.basic_weather_forecast.navigation.NavigationDestination
@@ -108,7 +107,7 @@ fun ForecastWholeDayScreen(
             state = swipeRefreshState,
             onRefresh = {
                 isRefreshing = true
-                viewModel.getWholeDayWeather(cityName ?: "")
+                cityName?.let { viewModel.getWholeDayWeather(it) }
                 MainScope().launch {
                     isRefreshing = false
                 }
@@ -118,42 +117,33 @@ fun ForecastWholeDayScreen(
                 Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .height(1000.dp),
+                    .background(color = Color(0xFF2E335A)),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top,
+                verticalArrangement = Arrangement.Center,
             ) {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .height(1000.dp)
-                        .background(color = Color(0xFF2E335A)),
-                    contentAlignment = Alignment.TopCenter,
-                ) {
-                    when (wholeDayWeatherUiState) {
-                        is WholeDayForecastUiState.Success -> {
-                            val weatherList =
-                                (wholeDayWeatherUiState as WholeDayForecastUiState.Success).data.list
-                            GroupedWeatherList(
-                                weatherList = weatherList,
-                                isCelsius = isCelsius
-                            )
-                        }
+                when (wholeDayWeatherUiState) {
+                    is WholeDayForecastUiState.Success -> {
+                        val weatherList =
+                            (wholeDayWeatherUiState as WholeDayForecastUiState.Success).data.list
+                        GroupedWeatherList(
+                            weatherList = weatherList, isCelsius = isCelsius
+                        )
+                    }
 
-                        is WholeDayForecastUiState.Error -> {
-                            Text(text = stringResource(R.string.weather_data_error_loading))
-                        }
+                    is WholeDayForecastUiState.Error -> {
+                        Text(text = stringResource(R.string.weather_data_error_loading))
+                    }
 
-                        is WholeDayForecastUiState.Loading -> {
-                            CircularProgressIndicator()
-                        }
+                    is WholeDayForecastUiState.Loading -> {
+                        CircularProgressIndicator()
+                    }
 
-                        is WholeDayForecastUiState.Nothing -> {
-                            Text(text = stringResource(R.string.weather_data_is_empty))
-                        }
+                    is WholeDayForecastUiState.Nothing -> {
+                        Text(text = stringResource(R.string.weather_data_is_empty))
+                    }
 
-                        else -> {
-                            Text(text = stringResource(R.string.something_went_wrong))
-                        }
+                    else -> {
+                        Text(text = stringResource(R.string.something_went_wrong))
                     }
                 }
             }
@@ -163,38 +153,18 @@ fun ForecastWholeDayScreen(
 
 @Composable
 fun GroupedWeatherList(
-    weatherList: List<ListElement>,
-    isCelsius: Boolean
+    weatherList: List<ListElement>, isCelsius: Boolean
 ) {
     val groupedWeather = weatherList.groupByDate()
 
     LazyColumn {
         groupedWeather.forEach { (date, weatherForDate) ->
             item {
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color.White,
-                    tonalElevation = 4.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = date,
-                        style = TextStyle(
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
+                WholeDayDateHeader(date)
             }
             items(weatherForDate) { weatherItem ->
                 HourlyForecastListItem(
-                    weatherList = weatherItem,
-                    isCelsius = isCelsius
+                    weatherList = weatherItem, isCelsius = isCelsius
                 )
             }
         }
@@ -202,17 +172,37 @@ fun GroupedWeatherList(
 }
 
 @Composable
+private fun WholeDayDateHeader(date: String) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = Color.White,
+        tonalElevation = 4.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = date,
+            style = TextStyle(
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(vertical = 4.dp)
+        )
+    }
+}
+
+@Composable
 fun HourlyForecastListItem(
-    weatherList: ListElement,
-    isCelsius: Boolean
+    weatherList: ListElement, isCelsius: Boolean
 ) {
     val temperatureMainText = temperatureConverter(
-        isCelsius = isCelsius,
-        temperature = weatherList.main.temp ?: 0.0
+        isCelsius = isCelsius, temperature = weatherList.main.temp ?: 0.0
     )
     val temperatureFeelLikesText = temperatureConverter(
-        isCelsius = isCelsius,
-        temperature = weatherList.main.feelsLike ?: 0.0
+        isCelsius = isCelsius, temperature = weatherList.main.feelsLike ?: 0.0
     )
 
 
@@ -223,6 +213,7 @@ fun HourlyForecastListItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(bottom = 8.dp)
     ) {
         Column(
             modifier = Modifier
@@ -231,14 +222,12 @@ fun HourlyForecastListItem(
         ) {
             Spacer(modifier = Modifier.height(4.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = weatherList.dt.toTimeString(),
-                            style = TextStyle(
+                            text = weatherList.dt.toTimeString(), style = TextStyle(
                                 color = Color.Black,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 20.sp,
@@ -248,8 +237,7 @@ fun HourlyForecastListItem(
                     }
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = weatherList.weather[0].description.toString(),
-                        style = TextStyle(
+                        text = weatherList.weather[0].description.toString(), style = TextStyle(
                             color = Color.Black,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
@@ -257,8 +245,7 @@ fun HourlyForecastListItem(
                     )
                 }
                 Text(
-                    text = temperatureMainText,
-                    style = TextStyle(
+                    text = temperatureMainText, style = TextStyle(
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 24.sp,
@@ -286,8 +273,7 @@ fun HourlyForecastListItem(
 
 @Composable
 fun temperatureConverter(
-    isCelsius: Boolean,
-    temperature: Double
+    isCelsius: Boolean, temperature: Double
 ): String {
     return temperature.let {
         if (isCelsius) "${it.toCelsius()}${stringResource(R.string.weather_unit)}"

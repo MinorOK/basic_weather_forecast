@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.basic_weather_forecast.features.home.presentation.ForecastMainDestination
-import com.example.basic_weather_forecast.features.home.presentation.ForecastMainScreen
-import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayDestination
-import com.example.basic_weather_forecast.features.whole_day.presentation.ForecastWholeDayScreen
+import com.example.basic_weather_forecast.features.home.presenter.ForecastMainDestination
+import com.example.basic_weather_forecast.features.home.presenter.ForecastMainScreen
+import com.example.basic_weather_forecast.features.whole_day.presenter.ForecastWholeDayDestination
+import com.example.basic_weather_forecast.features.whole_day.presenter.ForecastWholeDayScreen
 
 @Composable
 fun ForecastNavHost(

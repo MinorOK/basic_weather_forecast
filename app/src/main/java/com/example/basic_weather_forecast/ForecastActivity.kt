@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.basic_weather_forecast.common.utils.FirstRunUtil
-import com.example.basic_weather_forecast.features.home.presentation.HomeViewModel
+import com.example.basic_weather_forecast.features.home.presenter.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

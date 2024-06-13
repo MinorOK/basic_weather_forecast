@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.features.home.presentation
+package com.example.basic_weather_forecast.features.home.presenter
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -125,15 +125,13 @@ fun ForecastMainScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             SwipeRefresh(
-                state = swipeRefreshState,
-                onRefresh = {
+                state = swipeRefreshState, onRefresh = {
                     isRefreshing = true
                     cityName?.let { viewModel.getCurrentWeather(it) }
                     MainScope().launch {
                         isRefreshing = false
                     }
-                },
-                modifier = Modifier.fillMaxSize()
+                }, modifier = Modifier.fillMaxSize()
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -189,8 +187,7 @@ fun ForecastMainScreen(
                     .padding(innerPadding)
                     .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
-                SearchBox(
-                    searchText = searchText,
+                SearchBox(searchText = searchText,
                     onSearchTextChanged = { searchText = it },
                     onSearchSubmit = {
                         cityName = searchText
@@ -201,15 +198,12 @@ fun ForecastMainScreen(
                             cityName?.let { viewModel.getCurrentWeather(it) }
                         }
                         searchText = ""
-                    }
-                )
+                    })
             }
 
             if (isBottomSheetVisible) {
-                ModalBottomSheet(
-                    onDismissRequest = { isBottomSheetVisible = false }
-                ) {
-                    SettingsContent(viewModel)
+                ModalBottomSheet(onDismissRequest = { isBottomSheetVisible = false }) {
+                    HomeSettingsContent(viewModel)
                 }
             }
         }
@@ -217,14 +211,13 @@ fun ForecastMainScreen(
 }
 
 @Composable
-fun SettingsContent(
+fun HomeSettingsContent(
     viewModel: HomeViewModel
 ) {
     val isCelsius by viewModel.isCelsius.collectAsState()
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         Box(
             modifier = Modifier
@@ -234,8 +227,7 @@ fun SettingsContent(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(R.string.temperature),
@@ -247,33 +239,28 @@ fun SettingsContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (isCelsius)
-                        Text(
-                            text = "${stringResource(R.string.weather_celsius)} (${stringResource(R.string.weather_unit_celsius)})",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                            ),
-                        )
-                    else
-                        Text(
-                            text = "${stringResource(R.string.weather_fahrenheit)} (${
-                                stringResource(
-                                    R.string.weather_unit_fahrenheit
-                                )
-                            })",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                            ),
-                        )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Switch(
-                        checked = isCelsius,
-                        onCheckedChange = {
-                            viewModel.setCelsius(it)
-                        }
+                    if (isCelsius) Text(
+                        text = "${stringResource(R.string.weather_celsius)} (${stringResource(R.string.weather_unit_celsius)})",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                        ),
                     )
+                    else Text(
+                        text = "${stringResource(R.string.weather_fahrenheit)} (${
+                            stringResource(
+                                R.string.weather_unit_fahrenheit
+                            )
+                        })",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                        ),
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Switch(checked = isCelsius, onCheckedChange = {
+                        viewModel.setCelsius(it)
+                    })
                 }
             }
         }

@@ -36,8 +36,8 @@ fun SearchBox(
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done // Change to Done action
+            imeAction = ImeAction.Done
         ),
-        keyboardActions = KeyboardActions(onDone = { onSearchSubmit() }) // Call onSearchSubmit when Enter is pressed
+        keyboardActions = KeyboardActions(onDone = { onSearchSubmit() })
     )
 }
