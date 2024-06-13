@@ -1,7 +1,6 @@
 package com.example.basic_weather_forecast.features.home.datasource.model
 
 import android.os.Parcelable
-import com.example.basic_weather_forecast.common.model.CountryCodes
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 

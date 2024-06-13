@@ -1,9 +1,8 @@
 package com.example.basic_weather_forecast.features.whole_day.datasource.network
 
-import com.example.basic_weather_forecast.common.model.Result
-import com.example.basic_weather_forecast.features.home.datasource.HomeForecastDataSource
+import com.example.basic_weather_forecast.features.home.datasource.model.Result
 import com.example.basic_weather_forecast.features.whole_day.datasource.WholeDayForecastDataSource
-import com.example.basic_weather_forecast.features.whole_day.datasource.model.ForecastWholeDayWeatherResponseModel
+import com.example.basic_weather_forecast.features.whole_day.datasource.model.WholeDayWeatherResponseModel
 import com.example.basic_weather_forecast.features.whole_day.datasource.model.WholeDayForecastRequestModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +16,7 @@ class WholeDayForecastDataSourceNetwork @Inject constructor(
     private val wholeDayForecastMapper: WholeDayForecastMapper,
 ) : WholeDayForecastDataSource {
 
-    override fun getWholeDayWeather(request: WholeDayForecastRequestModel): Flow<ForecastWholeDayWeatherResponseModel> {
+    override fun getWholeDayWeather(request: WholeDayForecastRequestModel): Flow<WholeDayWeatherResponseModel> {
         return flow {
             val response =
                 wholeDayForecastApi.requestWholeDayWeather(request.cityName, request.apiKey)

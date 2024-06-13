@@ -12,7 +12,6 @@ fun WeatherIcon(icon: String) {
         Image(
             painter = painterResource(id = resourceId),
             contentDescription = null,
-//            colorFilter = ColorFilter.tint(color = Color.Red)
         )
 }
 

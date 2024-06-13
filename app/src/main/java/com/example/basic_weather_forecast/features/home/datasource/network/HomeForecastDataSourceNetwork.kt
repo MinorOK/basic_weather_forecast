@@ -3,7 +3,7 @@ package com.example.basic_weather_forecast.features.home.datasource.network
 import com.example.basic_weather_forecast.features.home.datasource.HomeForecastDataSource
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherRequestModel
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
-import com.example.basic_weather_forecast.common.model.Result
+import com.example.basic_weather_forecast.features.home.datasource.model.Result
 import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingRequestModel
 import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingResponseModel
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeOneCallRequestModel

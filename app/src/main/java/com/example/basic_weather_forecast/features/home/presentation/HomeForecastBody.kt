@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,62 +32,47 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.basic_weather_forecast.R
-import com.example.basic_weather_forecast.common.model.Clouds
-import com.example.basic_weather_forecast.common.model.Coord
-import com.example.basic_weather_forecast.common.model.Main
-import com.example.basic_weather_forecast.common.model.Sys
-import com.example.basic_weather_forecast.common.model.Weather
-import com.example.basic_weather_forecast.common.model.Wind
 import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
+import com.example.basic_weather_forecast.common.utils.FormatterUtil.toGMTPlus7
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
+import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
+import com.example.basic_weather_forecast.features.whole_day.presentation.WholeDayViewModel
 
 @Composable
 fun ForecastMainScreenBody(
-    weather: HomeCurrentWeatherResponseModel?,
+    currentWeather: HomeCurrentWeatherResponseModel?,
     navigateToWholeDayScreen: (String) -> Unit,
     cityName: String,
-    isCelsiusState: State<Boolean>
+    isCelsiusState: State<Boolean>,
+    wholeDayViewModel: WholeDayViewModel = hiltViewModel()
 ) {
     val isCelsius by isCelsiusState
-    val myList: List<String> = listOf(
-        "01d",
-        "02d",
-        "03d",
-        "04d",
-        "09d",
-        "10d",
-        "11d",
-        "13d",
-        "50d",
-        "01n",
-        "02n",
-        "03n",
-        "04n",
-        "09n",
-        "10n",
-        "11n",
-        "13n",
-        "50n"
-    )
+    val wholeDayWeatherUiState by wholeDayViewModel.wholeDayWeatherUiState.collectAsState()
+
+    LaunchedEffect(wholeDayViewModel) {
+        cityName.let {
+            wholeDayViewModel.getWholeDayWeather(it)
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.height(4.dp))
-        CurrentTemperature(isCelsius, weather)
+        CurrentTemperature(isCelsius, currentWeather)
         Spacer(modifier = Modifier.height(4.dp))
-        WeatherDescription(weather, isCelsius)
+        WeatherDescription(currentWeather, isCelsius)
         Spacer(modifier = Modifier.height(40.dp))
-        WeatherHourlyBox(myList, navigateToWholeDayScreen, cityName)
-        WeatherGridBoxDetailFirstRow(weather)
-        WeatherGridBoxDetailSecondRow(weather = weather, isCelsius = isCelsius)
+        WeatherHourlyBox(wholeDayWeatherUiState, navigateToWholeDayScreen, cityName, isCelsius)
+        WeatherGridBoxDetailFirstRow(currentWeather)
+        WeatherGridBoxDetailSecondRow(weather = currentWeather, isCelsius = isCelsius)
     }
 }
 
@@ -326,9 +313,10 @@ fun gridBoxDetail(painter: Painter, title: String, value: String, valueUnit: Str
 
 @Composable
 fun WeatherHourlyBox(
-    myList: List<String>,
+    wholeDayWeatherUiState: WholeDayForecastUiState,
     navigateToWholeDayScreen: (String) -> Unit,
     cityName: String,
+    isCelsius: Boolean
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -345,9 +333,31 @@ fun WeatherHourlyBox(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            LazyRow {
-                items(myList) { icon ->
-                    HourlyWeatherForecast(icon, 0.0)
+            when (wholeDayWeatherUiState) {
+                is WholeDayForecastUiState.Success -> {
+                    val detailList = wholeDayWeatherUiState.data.list
+                    LazyRow {
+                        items(detailList) {
+                            HourlyWeatherForecast(
+                                it.weather[0].icon ?: "",
+                                it.main.temp ?: 0.0,
+                                it.dt.toGMTPlus7(),
+                                isCelsius
+                            )
+                        }
+                    }
+                }
+
+                else -> {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(71.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -355,21 +365,27 @@ fun WeatherHourlyBox(
 }
 
 @Composable
-fun HourlyWeatherForecast(icon: String, temp: Double) {
+fun HourlyWeatherForecast(
+    icon: String,
+    temp: Double,
+    time: String,
+    isCelsius: Boolean
+) {
+    val myTemp = if (isCelsius) temp.toCelsius() else temp.toFahrenheit()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.padding(end = 12.dp)
     ) {
         Text(
-            "08:00 น.", color = Color.Black,
+            "$time ${stringResource(R.string.time_unit)}", color = Color.Black,
             style = TextStyle(
                 fontWeight = FontWeight.Normal,
             ),
         )
         WeatherIcon(icon = icon)
         Text(
-            "30°",
+            "${myTemp}${stringResource(R.string.weather_unit)}",
             color = Color.Black,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
@@ -386,55 +402,55 @@ fun tempConverter(isCelsius: Boolean, temp: Double?): String {
     return "${temp.toFahrenheit().toString()}${stringResource(R.string.weather_unit)}"
 }
 
-@Preview
-@Composable
-fun ForecastMainCurrentWeatherComponentPreview() {
-    ForecastMainScreenBody(
-        HomeCurrentWeatherResponseModel(
-            coord = Coord(
-                lon = 100.5167,
-                lat = 13.75
-            ),
-            weather =
-            listOf(
-                Weather(
-                    id = 804,
-                    main = "Clouds",
-                    description = "overcast clouds",
-                    icon = "",
-                )
-            ),
-            base = "stations",
-            main = Main(
-                temp = 300.22,
-                feelsLike = 305.12,
-                tempMin = 299.21,
-                tempMax = 300.33,
-                pressure = 1008,
-                humidity = 99,
-                seaLevel = 1008,
-                grndLevel = 1007
-            ),
-            visibility = 7152,
-            wind = Wind(speed = 3.24, deg = 133, gust = 6.88),
-            rain = null,
-            clouds = Clouds(all = 100),
-            dt = 1716511831,
-            sys = Sys(
-                type = 2,
-                id = 2090634,
-                country = "TH",
-                sunrise = 1716504596,
-                sunset = 1716550797
-            ),
-            timezone = 25200,
-            id = 1609350,
-            name = "Bangkok",
-            cod = 200
-        ),
-        {},
-        "Bangkok",
-        mutableStateOf(true),
-    )
-}
-
+//@Preview
+//@Composable
+//fun ForecastMainCurrentWeatherComponentPreview() {
+//    ForecastMainScreenBody(
+//        HomeCurrentWeatherResponseModel(
+//            coord = Coord(
+//                lon = 100.5167,
+//                lat = 13.75
+//            ),
+//            weather =
+//            listOf(
+//                Weather(
+//                    id = 804,
+//                    main = "Clouds",
+//                    description = "overcast clouds",
+//                    icon = "",
+//                )
+//            ),
+//            base = "stations",
+//            main = Main(
+//                temp = 300.22,
+//                feelsLike = 305.12,
+//                tempMin = 299.21,
+//                tempMax = 300.33,
+//                pressure = 1008,
+//                humidity = 99,
+//                seaLevel = 1008,
+//                grndLevel = 1007
+//            ),
+//            visibility = 7152,
+//            wind = Wind(speed = 3.24, deg = 133, gust = 6.88),
+//            rain = null,
+//            clouds = Clouds(all = 100),
+//            dt = 1716511831,
+//            sys = Sys(
+//                type = 2,
+//                id = 2090634,
+//                country = "TH",
+//                sunrise = 1716504596,
+//                sunset = 1716550797
+//            ),
+//            timezone = 25200,
+//            id = 1609350,
+//            name = "Bangkok",
+//            cod = 200
+//        ),
+//        {},
+//        "Bangkok",
+//        mutableStateOf(true),
+//    )
+//}
+//

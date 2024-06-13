@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.common.model
+package com.example.basic_weather_forecast.features.home.datasource.model
 
 sealed class Result<out T> {
     data class Success<out T>(val data: T) : Result<T>()

@@ -72,16 +72,13 @@ fun ForecastMainScreen(
     var isBottomSheetVisible by remember { mutableStateOf(false) }
 
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
-    val currentWeatherUiState by viewModel.currentWeatherUiState.collectAsState()
     val isCelsius = viewModel.isCelsius.collectAsState()
-    val oneCallUiState by viewModel.oneCallUiState.collectAsState()
-
+    val currentWeatherUiState by viewModel.currentWeatherUiState.collectAsState()
 
     LaunchedEffect(viewModel) {
         cityName = viewModel.getSearchString()
         cityName?.let {
             viewModel.getCurrentWeather(it)
-            viewModel.getWeatherWithOneCall(it)
         }
     }
 

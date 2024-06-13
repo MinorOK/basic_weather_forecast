@@ -1,8 +1,8 @@
 package com.example.basic_weather_forecast.features.home.datasource.network
 
-import com.example.basic_weather_forecast.common.model.ErrorResponse
+import com.example.basic_weather_forecast.features.home.datasource.model.ErrorResponse
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeOneCallResponseModel
-import com.example.basic_weather_forecast.common.model.Result
+import com.example.basic_weather_forecast.features.home.datasource.model.Result
 import com.google.gson.Gson
 import io.reactivex.functions.Function
 import retrofit2.Response

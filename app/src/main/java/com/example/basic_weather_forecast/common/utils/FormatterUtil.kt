@@ -20,7 +20,7 @@ object FormatterUtil {
     fun Long?.toGMTPlus7(): String {
         return this?.let {
             val date = Date(it * 1000L)
-            val format = SimpleDateFormat("HH:mm - dd/MM/yyyy", Locale.getDefault())
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
             format.timeZone = TimeZone.getTimeZone("GMT+7")
             format.format(date)
         } ?: ""

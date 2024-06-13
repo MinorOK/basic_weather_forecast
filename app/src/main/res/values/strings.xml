@@ -18,6 +18,7 @@
     <string name="weather_unit">°</string>
     <string name="kilometer">กม.</string>
     <string name="vision">ทัศนวิสัย</string>
+    <string name="time_unit">น.</string>
     <string name="kilo_per_hour">กม./ชม.</string>
     <string name="air_pressure">ความกดอากาศ</string>
     <string name="air_pressure_unit">hPa</string>

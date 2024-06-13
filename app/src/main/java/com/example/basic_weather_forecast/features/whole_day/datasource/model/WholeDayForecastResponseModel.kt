@@ -1,18 +1,18 @@
 package com.example.basic_weather_forecast.features.whole_day.datasource.model
 
 import android.os.Parcelable
-import com.example.basic_weather_forecast.common.model.Clouds
-import com.example.basic_weather_forecast.common.model.Coord
-import com.example.basic_weather_forecast.common.model.Main
-import com.example.basic_weather_forecast.common.model.Rain
-import com.example.basic_weather_forecast.common.model.Sys
-import com.example.basic_weather_forecast.common.model.Weather
-import com.example.basic_weather_forecast.common.model.Wind
+import com.example.basic_weather_forecast.features.home.datasource.model.Clouds
+import com.example.basic_weather_forecast.features.home.datasource.model.Coord
+import com.example.basic_weather_forecast.features.home.datasource.model.Main
+import com.example.basic_weather_forecast.features.home.datasource.model.Rain
+import com.example.basic_weather_forecast.features.home.datasource.model.Sys
+import com.example.basic_weather_forecast.features.home.datasource.model.Weather
+import com.example.basic_weather_forecast.features.home.datasource.model.Wind
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ForecastWholeDayWeatherResponseModel(
+data class WholeDayWeatherResponseModel(
     @SerializedName("cod")
     val cod: String,
     @SerializedName("message")
