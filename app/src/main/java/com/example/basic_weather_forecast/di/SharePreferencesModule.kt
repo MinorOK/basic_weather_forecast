@@ -1,11 +1,11 @@
 package com.example.basic_weather_forecast.di
 
 import android.content.Context
-import com.example.basic_weather_forecast.datastore.sharePreferences.PreferencesRepository
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.GetCityNameUseCase
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.GetIsCelsiusUseCase
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.SetCityNameUseCase
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.SetIsCelsiusUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.PreferencesRepository
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.GetCityNameUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.GetIsCelsiusUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.SetCityNameUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.SetIsCelsiusUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

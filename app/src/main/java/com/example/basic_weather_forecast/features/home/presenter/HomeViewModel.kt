@@ -3,10 +3,10 @@ package com.example.basic_weather_forecast.features.home.presenter
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.GetCityNameUseCase
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.GetIsCelsiusUseCase
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.SetCityNameUseCase
-import com.example.basic_weather_forecast.datastore.sharePreferences.domain.SetIsCelsiusUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.GetCityNameUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.GetIsCelsiusUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.SetCityNameUseCase
+import com.example.basic_weather_forecast.datastore.share_preferences.domain.SetIsCelsiusUseCase
 import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingRequestModel
 import com.example.basic_weather_forecast.features.home.datasource.model.GeocodingResponseModel
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherRequestModel
@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
                 setCityNameUseCase(value)
                 continuation.resume(Unit)
             } catch (e: Exception) {
-                continuation.resumeWithException(e)
+                Log.e("ForecastLog", "Failed to set search string", e)
             }
         }
     }
@@ -81,7 +81,7 @@ class HomeViewModel @Inject constructor(
                 val result = getCityNameUseCase()
                 continuation.resume(result)
             } catch (e: Exception) {
-                continuation.resumeWithException(e)
+                Log.e("ForecastLog", "Failed to get search string", e)
             }
         }
     }

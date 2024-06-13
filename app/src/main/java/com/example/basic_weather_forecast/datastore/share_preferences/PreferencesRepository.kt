@@ -1,4 +1,4 @@
-package com.example.basic_weather_forecast.datastore.sharePreferences
+package com.example.basic_weather_forecast.datastore.share_preferences
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

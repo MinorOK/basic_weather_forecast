@@ -26,7 +26,6 @@ class WholeDayViewModel @Inject constructor(
         viewModelScope.launch {
             val apiKey = "5966d26e22e0a37b27f4186cd9df1a4b"
             try {
-                delay(1000)
                 getWholeDayWeatherUseCase.execute(
                     WholeDayForecastRequestModel(cityName, apiKey)
                 ).onStart {

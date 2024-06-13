@@ -1,6 +1,6 @@
-package com.example.basic_weather_forecast.datastore.sharePreferences.domain
+package com.example.basic_weather_forecast.datastore.share_preferences.domain
 
-import com.example.basic_weather_forecast.datastore.sharePreferences.PreferencesRepository
+import com.example.basic_weather_forecast.datastore.share_preferences.PreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

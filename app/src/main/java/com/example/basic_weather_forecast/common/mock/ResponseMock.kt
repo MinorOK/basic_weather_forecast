@@ -4,12 +4,9 @@ import com.example.basic_weather_forecast.features.home.datasource.model.Clouds
 import com.example.basic_weather_forecast.features.home.datasource.model.Coord
 import com.example.basic_weather_forecast.features.home.datasource.model.HomeCurrentWeatherResponseModel
 import com.example.basic_weather_forecast.features.home.datasource.model.Main
-import com.example.basic_weather_forecast.features.home.datasource.model.Rain
 import com.example.basic_weather_forecast.features.home.datasource.model.Sys
 import com.example.basic_weather_forecast.features.home.datasource.model.Weather
 import com.example.basic_weather_forecast.features.home.datasource.model.Wind
-import com.example.basic_weather_forecast.features.whole_day.datasource.model.ListElement
-import com.example.basic_weather_forecast.features.whole_day.datasource.model.WholeDayWeatherResponseModel
 
 object ResponseMock {
     val homeCurrentWeather = HomeCurrentWeatherResponseModel(
