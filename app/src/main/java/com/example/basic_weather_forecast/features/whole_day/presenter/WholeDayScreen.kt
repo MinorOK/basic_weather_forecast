@@ -44,12 +44,12 @@ import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.ui.WeatherIcon
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.groupByDate
-import com.example.basic_weather_forecast.common.utils.FormatterUtil.toCelsius
-import com.example.basic_weather_forecast.common.utils.FormatterUtil.toFahrenheit
 import com.example.basic_weather_forecast.common.utils.FormatterUtil.toTimeString
 import com.example.basic_weather_forecast.features.home.presenter.HomeViewModel
+import com.example.basic_weather_forecast.features.home.presenter.composable.HomeTemperatureConverter
 import com.example.basic_weather_forecast.features.whole_day.datasource.model.ListElement
 import com.example.basic_weather_forecast.features.whole_day.domain.model.WholeDayForecastUiState
+import com.example.basic_weather_forecast.features.whole_day.presenter.composable.ForecastDetailTextRowContent
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -199,10 +199,10 @@ private fun WholeDayDateHeader(date: String) {
 fun HourlyForecastListItem(
     weatherList: ListElement, isCelsius: Boolean
 ) {
-    val temperatureMainText = temperatureConverter(
+    val temperatureMainText = HomeTemperatureConverter(
         isCelsius = isCelsius, temperature = weatherList.main.temp ?: 0.0
     )
-    val temperatureFeelLikesText = temperatureConverter(
+    val temperatureFeelLikesText = HomeTemperatureConverter(
         isCelsius = isCelsius, temperature = weatherList.main.feelsLike ?: 0.0
     )
 
@@ -253,17 +253,17 @@ fun HourlyForecastListItem(
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            ForecastDetail(
+            ForecastDetailTextRowContent(
                 title = stringResource(R.string.weather_feels_like),
                 detail = temperatureFeelLikesText
             )
             HorizontalDivider()
-            ForecastDetail(
+            ForecastDetailTextRowContent(
                 title = stringResource(R.string.weather_wind_speed),
                 detail = "${weatherList.wind.speed} ${stringResource(R.string.kilo_per_hour)}"
             )
             HorizontalDivider()
-            ForecastDetail(
+            ForecastDetailTextRowContent(
                 title = stringResource(R.string.weather_humidity),
                 detail = "${weatherList.main.humidity}${stringResource(R.string.percentage)}"
             )
@@ -271,25 +271,4 @@ fun HourlyForecastListItem(
     }
 }
 
-@Composable
-fun temperatureConverter(
-    isCelsius: Boolean, temperature: Double
-): String {
-    return temperature.let {
-        if (isCelsius) "${it.toCelsius()}${stringResource(R.string.weather_unit)}"
-        else "${it.toFahrenheit()}${stringResource(R.string.weather_unit)}"
-    }
-}
 
-@Composable
-fun ForecastDetail(title: String, detail: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = title)
-        Text(text = detail)
-    }
-}

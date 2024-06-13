@@ -45,6 +45,8 @@ import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.ui.SearchBox
 import com.example.basic_weather_forecast.features.home.domain.model.HomeForecastCurrentWeatherUiState
+import com.example.basic_weather_forecast.features.home.presenter.composable.ForecastMainScreenBody
+import com.example.basic_weather_forecast.features.home.presenter.composable.HomeSettingsContent
 import com.example.basic_weather_forecast.navigation.NavigationDestination
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -210,59 +212,3 @@ fun ForecastMainScreen(
     }
 }
 
-@Composable
-fun HomeSettingsContent(
-    viewModel: HomeViewModel
-) {
-    val isCelsius by viewModel.isCelsius.collectAsState()
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(R.string.temperature),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (isCelsius) Text(
-                        text = "${stringResource(R.string.weather_celsius)} (${stringResource(R.string.weather_unit_celsius)})",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        ),
-                    )
-                    else Text(
-                        text = "${stringResource(R.string.weather_fahrenheit)} (${
-                            stringResource(
-                                R.string.weather_unit_fahrenheit
-                            )
-                        })",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
-                        ),
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Switch(checked = isCelsius, onCheckedChange = {
-                        viewModel.setCelsius(it)
-                    })
-                }
-            }
-        }
-    }
-}
