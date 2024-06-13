@@ -45,5 +45,4 @@ object ResponseMock {
         name = "Bangkok",
         cod = 200
     )
-
 }

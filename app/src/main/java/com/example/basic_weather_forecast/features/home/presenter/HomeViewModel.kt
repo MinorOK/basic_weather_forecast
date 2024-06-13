@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -87,6 +86,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getCurrentWeather(cityName: String) {
+//        runCatching {
+//
+//        }.onSuccess {
+//
+//        }.onFailure {
+//
+//        }
+
         viewModelScope.launch {
             try {
                 getCurrentWeatherUseCase.execute(

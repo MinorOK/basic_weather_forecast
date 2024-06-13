@@ -35,6 +35,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.basic_weather_forecast.ForecastAppBar
 import com.example.basic_weather_forecast.R
 import com.example.basic_weather_forecast.common.theme.Typography
@@ -84,6 +85,9 @@ fun ForecastWholeDayScreen(
     val isCelsiusState = homeViewModel.isCelsius.collectAsState()
     val isCelsius by isCelsiusState
     var cityName by remember { mutableStateOf<String?>(null) }
+
+//    val navBackStackEntry = rememberNavController().currentBackStackEntry
+//    val cityName = navBackStackEntry?.arguments?.getString(ForecastWholeDayDestination.cityNameArg)
 
     LaunchedEffect(homeViewModel) {
         cityName = homeViewModel.getSearchString()
